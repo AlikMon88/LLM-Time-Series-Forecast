@@ -1,88 +1,102 @@
 import numpy as np
-
+import torch
 
 def ts_encoding(series, model_type="gpt", precision=3, alpha=0.99, beta=0.3):
     
     """
-    Preprocess time series data for LLMs (GPT-style or LLaMA-style tokenization).
+    Preprocess a batch of time series data for LLMs (GPT-style or LLaMA-style tokenization).
     
     Parameters:
-    - series (list or np.array): Raw time series data.
+    - series (np.array): Raw time series data with shape (n_samples, seq_len).
     - model_type (str): "gpt" for GPT-style tokenization, "llama" for LLaMA-style.
     - precision (int): Number of decimal places to retain.
     - alpha (float): Percentile scaling for normalization.
     - beta (float): Offset for normalization.
     
     Returns:
-    - str: Tokenized time series string.
+    - list of str: Tokenized time series strings.
+    - np.array: Offsets for each sample.
+    - np.array: Scale factors for each sample.
     """
 
-    # Scale the series
     series = np.array(series)
-    min_val, max_val = np.min(series), np.max(series) ## Min-Max Scaling
-    offset = min_val - beta * (max_val - min_val)
-    scale_factor = np.percentile(series - offset, alpha * 100)
+    n_samples, seq_len = series.shape
+    
+    min_vals = np.min(series, axis=1, keepdims=True)
+    max_vals = np.max(series, axis=1, keepdims=True)
+    offsets = min_vals - beta * (max_vals - min_vals)
+    scale_factors = np.percentile(series - offsets, alpha * 100, axis=1, keepdims=True)
+    
+    scale_factors[scale_factors == 0] = 1  # Prevent division by zero
+    
+    normalized_series = (series - offsets) / scale_factors
+    formatted_values = np.round(normalized_series, precision).astype(str)
+    
+    tokenized_series = []
+    for i in range(n_samples):
+        if model_type == "gpt":
+            tokenized_series.append(", ".join(" ".join(str(x)) for x in formatted_values[i]))
+        elif model_type == "llama":
+            tokenized_series.append(", ".join(formatted_values[i]))
+        else:
+            raise ValueError("model_type must be 'gpt' or 'llama'")
+    
+    return tokenized_series, offsets.squeeze(), scale_factors.squeeze()
 
-    print('Offset: ', offset, 'Scale-Factor: ', scale_factor)
-
-    # Prevent division by zero
-    if scale_factor == 0:
-        scale_factor = 1
-
-    # Normalize the series
-    normalized_series = (series - offset) / scale_factor
-
-    # Convert to fixed-precision strings
-    formatted_values = [f"{x:.{precision}f}" for x in normalized_series]
-
-    if model_type == "gpt":
-        # GPT-style tokenization: Add spaces between digits and use commas between values
-        tokenized_series = ", ".join(" ".join(str(x)) for x in formatted_values)
-
-    elif model_type == "llama":
-        # LLaMA-style tokenization: No spaces between digits, just comma-separated numbers
-        tokenized_series = ", ".join(formatted_values)
-
-    else:
-        raise ValueError("model_type must be 'gpt' or 'llama'")
-
-    return tokenized_series, offset, scale_factor
-
-
-def ts_decoding(tokenized_series, model_type="gpt", precision=3, offset=0, scale_factor=1):
+def ts_decoding(tokenized_series, model_type="gpt", precision=3, offsets=None, scale_factors=None):
+    
     """
-    Convert tokenized LLM output back into numerical time series.
-
+    Convert a batch of tokenized LLM output back into numerical time series.
+    
     Parameters:
-    - tokenized_series (str): The string output from the LLM.
+    - tokenized_series (list of str): The list of tokenized time series strings.
     - model_type (str): "gpt" for GPT-style, "llama" for LLaMA-style.
     - precision (int): Number of decimal places to round.
-    - offset (float): Offset used during normalization (default=0, should match encoding step).
-    - scale_factor (float): Scale factor used during normalization (default=1, should match encoding step).
-
+    - offsets (np.array): Offsets used during normalization (shape: n_samples,).
+    - scale_factors (np.array): Scale factors used during normalization (shape: n_samples,).
+    
     Returns:
-    - np.array: Reconstructed time series values.
+    - np.array: Reconstructed time series values with shape (n_samples, seq_len).
     """
+    
+    decoded_series = []
+    for ts in tokenized_series:
+        if model_type == "gpt":
+            values = ts.split(", ")
+            values = ["".join(x.split()) for x in values]  # Remove spaces between digits
+        elif model_type == "llama":
+            values = ts.split(", ")
+        else:
+            raise ValueError("model_type must be 'gpt' or 'llama'")
+        
+        decoded_series.append([float(x) for x in values])
+    
+    decoded_series = np.array(decoded_series)
+    original_series = decoded_series * scale_factors[:, None] + offsets[:, None]
+    
+    return np.round(original_series, precision)
 
-    if model_type == "gpt":
-        # GPT-style decoding: Remove spaces and split by commas
-        values = tokenized_series.split(", ")
-        values = ["".join(x.split()) for x in values]  # Remove spaces between digits
+# Modified tokenization with chunking
+def process_sequences(texts, tokenizer, max_length=512, stride=256):
 
-    elif model_type == "llama":
-        # LLaMA-style decoding: Just split by commas (no extra spaces to remove)
-        values = tokenized_series.split(", ")
+    all_input_ids = []
+    for text in texts:
+        # Apply Qwen's tokenization scheme to the text:
+        seq_ids = text.input_ids[0]
 
-    else:
-        raise ValueError("model_type must be 'gpt' or 'llama'")
-
-    # Convert to float
-    decoded_series = np.array([float(x) for x in values])
-
-    # Reverse normalization (scale and shift back)
-    original_series = decoded_series * scale_factor + offset
-
-    return np.round(original_series, precision)  # Ensure correct precision
+        # Create sliding windows to further divide the data into chunks:
+        for i in range(0, len(seq_ids), stride):
+            chunk = seq_ids[i : i + max_length]
+            if len(chunk) < max_length:
+                chunk = torch.cat(
+                    [
+                        chunk,
+                        torch.full((max_length - len(chunk),), tokenizer.pad_token_id),
+                    ]
+                )
+            all_input_ids.append(chunk)
+            
+    return torch.stack(all_input_ids)
 
 
 if __name__ == '__main__':
