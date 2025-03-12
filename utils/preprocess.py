@@ -20,7 +20,7 @@ def ts_encoding(series, model_type="gpt", precision=3, alpha=0.99, beta=0.3):
     """
 
     series = np.array(series)
-    n_samples, seq_len = series.shape
+    n_samples = len(series)
     
     min_vals = np.min(series, axis=1, keepdims=True)
     max_vals = np.max(series, axis=1, keepdims=True)
@@ -77,14 +77,14 @@ def ts_decoding(tokenized_series, model_type="gpt", precision=3, offsets=None, s
     return np.round(original_series, precision)
 
 # Modified tokenization with chunking
-def process_sequences(texts, tokenizer, max_length=512, stride=256):
+def process_sequences(texts, tokenizer, max_length=256, stride=128): #stride(128)-token overlap between consecutive chunks, helping models retain context better.
 
     all_input_ids = []
     for text in texts:
-        # Apply Qwen's tokenization scheme to the text:
-        seq_ids = text.input_ids[0]
 
-        # Create sliding windows to further divide the data into chunks:
+        encoding = tokenizer(text, return_tensors="pt", add_special_tokens=False)
+        seq_ids = encoding.input_ids[0]
+
         for i in range(0, len(seq_ids), stride):
             chunk = seq_ids[i : i + max_length]
             if len(chunk) < max_length:
@@ -95,7 +95,7 @@ def process_sequences(texts, tokenizer, max_length=512, stride=256):
                     ]
                 )
             all_input_ids.append(chunk)
-            
+
     return torch.stack(all_input_ids)
 
 
