@@ -55,7 +55,9 @@ train_texts, val_texts = load_and_preprocess("data/lotka_volterra_data.h5")
 
 # Modified tokenization with chunking
 def process_sequences(texts, tokenizer, max_length=512, stride=256):
+    
     all_input_ids = []
+
     for text in texts:
         # Apply Qwen's tokenization scheme to the text:
         encoding = tokenizer(text, return_tensors="pt", add_special_tokens=False)
