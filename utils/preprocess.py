@@ -1,7 +1,7 @@
 import numpy as np
 import torch
 
-def ts_encoding(series, model_type="gpt", precision=3, alpha=0.99, beta=0.3):
+def ts_encoding(series, model_type="llama", precision=3, alpha=0.99, beta=0.3):
     
     """
     Preprocess a batch of time series data for LLMs (GPT-style or LLaMA-style tokenization).
@@ -43,21 +43,36 @@ def ts_encoding(series, model_type="gpt", precision=3, alpha=0.99, beta=0.3):
     
     return tokenized_series, offsets.squeeze(), scale_factors.squeeze()
 
-def ts_decoding(tokenized_series, model_type="gpt", precision=3, offsets=None, scale_factors=None):
-    
+def ts_decoding(tokenized_series, model_type="llama", precision=3, offsets=None, scale_factors=None):
     """
-    Convert a batch of tokenized LLM output back into numerical time series.
+    Convert tokenized LLM output back into numerical time series for either single samples or batches.
     
     Parameters:
-    - tokenized_series (list of str): The list of tokenized time series strings.
+    - tokenized_series (str or list of str): Single tokenized time series string or list of tokenized strings.
     - model_type (str): "gpt" for GPT-style, "llama" for LLaMA-style.
     - precision (int): Number of decimal places to round.
-    - offsets (np.array): Offsets used during normalization (shape: n_samples,).
-    - scale_factors (np.array): Scale factors used during normalization (shape: n_samples,).
+    - offsets (float or np.array): Offset(s) used during normalization.
+    - scale_factors (float or np.array): Scale factor(s) used during normalization.
     
     Returns:
-    - np.array: Reconstructed time series values with shape (n_samples, seq_len).
+    - np.array: Reconstructed time series values.
     """
+    
+    # Handle single sample case
+    single_sample = False
+    if isinstance(tokenized_series, str):
+        tokenized_series = [tokenized_series]
+        single_sample = True
+        if offsets is not None and not isinstance(offsets, (int, float)):
+            offsets = np.array([offsets])
+        if scale_factors is not None and not isinstance(scale_factors, (int, float)):
+            scale_factors = np.array([scale_factors])
+    
+    # Convert scalar values to arrays if needed
+    if offsets is not None and isinstance(offsets, (int, float)):
+        offsets = np.full(len(tokenized_series), offsets)
+    if scale_factors is not None and isinstance(scale_factors, (int, float)):
+        scale_factors = np.full(len(tokenized_series), scale_factors)
     
     decoded_series = []
     for ts in tokenized_series:
@@ -72,9 +87,20 @@ def ts_decoding(tokenized_series, model_type="gpt", precision=3, offsets=None, s
         decoded_series.append([float(x) for x in values])
     
     decoded_series = np.array(decoded_series)
-    original_series = decoded_series * scale_factors[:, None] + offsets[:, None]
     
-    return np.round(original_series, precision)
+    # Apply denormalization if offsets and scale_factors are provided
+    if offsets is not None and scale_factors is not None:
+        original_series = decoded_series * scale_factors[:, None] + offsets[:, None]
+    else:
+        original_series = decoded_series
+    
+    result = np.round(original_series, precision)
+    
+    # Return single sample without batch dimension if input was a single sample
+    if single_sample:
+        return result[0]
+    else:
+        return result
 
 # Modified tokenization with chunking
 def process_sequences(texts, tokenizer, max_length=256, stride=128): #stride(128)-token overlap between consecutive chunks, helping models retain context better.
