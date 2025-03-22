@@ -39,15 +39,10 @@ def create_forecast_prompt_joint(encoded_series_prey, encoded_series_predator, f
     <|im_end|>
     <|im_start|>assistant
     """
-
-    # prompt = f"""
-    # The data is formatted as: { '; '.join([f'{prey}, {pred}' for prey, pred in zip(encoded_series_prey.split(', '), encoded_series_predator.split(', '))]) };
-    # Predict next {forecast_length} pairs in same format - prey_1, predator_1; prey_2, predator_2; prey_3, predator_3 ...
-    # """
-
+    
     return prompt
 
-def create_forecast_prompt_joint_lora(encoded_series_prey, encoded_series_predator, forecast_length=10, prey_name='prey', predator_name='predator'):
+def create_forecast_prompt_joint_lora(encoded_series_prey, encoded_series_predator):
 
     prompt = f"""{ '; '.join([f'{prey}, {pred}' for prey, pred in zip(encoded_series_prey.split(', '), encoded_series_predator.split(', '))])};"""
 
@@ -82,9 +77,8 @@ def extract_forecasts(forecast_output, model_type='llama'):
 
 
 # Generate forecasts
-def generate_forecast(model, encoded_series, tokenizer, forecast_length=10, max_new_tokens=100):
+def generate_forecast(model, prompt, tokenizer, max_new_tokens=100):
 
-    prompt = create_forecast_prompt_sep(encoded_series, forecast_length)
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     
     # Set parameters for more deterministic generation

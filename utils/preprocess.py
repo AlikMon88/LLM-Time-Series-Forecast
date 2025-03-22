@@ -117,7 +117,7 @@ def process_sequences(texts, tokenizer, max_length=256, stride=128): #stride(128
                 chunk = torch.cat(
                     [
                         chunk,
-                        torch.full((max_length - len(chunk),), tokenizer.pad_token_id),
+                        torch.full((max_length - len(chunk),), tokenizer.pad_token_id), ## Decoder-Only like masking?
                     ]
                 )
             all_input_ids.append(chunk)
