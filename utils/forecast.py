@@ -47,6 +47,12 @@ def create_forecast_prompt_joint(encoded_series_prey, encoded_series_predator, f
 
     return prompt
 
+def create_forecast_prompt_joint_lora(encoded_series_prey, encoded_series_predator, forecast_length=10, prey_name='prey', predator_name='predator'):
+
+    prompt = f"""{ '; '.join([f'{prey}, {pred}' for prey, pred in zip(encoded_series_prey.split(', '), encoded_series_predator.split(', '))])};"""
+
+    return prompt
+
 def extract_forecasts(forecast_output, model_type='llama'):
     """
     Given forecast_output in the format:
