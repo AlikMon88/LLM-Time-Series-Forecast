@@ -124,6 +124,51 @@ def process_sequences(texts, tokenizer, max_length=256, stride=128): #stride(128
 
     return torch.stack(all_input_ids)
 
+import torch
+
+def preprocess_sequences_v2(time_series_data, tokenizer, max_length=512):
+    """
+    This function formulates the problem in a target -> label {Supervised Manner}.
+    """
+
+    inputs_arr = []
+    labels_arr = []
+
+    for num, series in enumerate(time_series_data):
+        # Split into historical data and target (future) data
+        data_points = series.split(';')
+
+        for i in range(len(data_points) - 1):  # -1 because we need at least one point for prediction
+            # Use sliding window approach for training examples
+            history_length = min(5, i + 1)  # Use up to 5 previous points as context
+
+            history = data_points[max(0, i + 1 - history_length) : i + 1]
+            target = data_points[i + 1]
+
+            # Format as instruction prompt
+            instruction = "Predict the next prey and predator populations based on the historical data."
+            history_text = " ".join(history)
+
+            # Create full prompt in Qwen's expected format
+            prompt = f"<|im_start|>user\n{instruction}\nHistorical data: {history_text}<|im_end|>\n<|im_start|>assistant\n"
+            target_text = f"{target.strip()}<|im_end|>"
+
+            if i == 5 and num == 5:
+                print('---- Example-Prompt ----\n')
+                print('PROMPT: ')
+                print(prompt)
+                print('\nTARGET: ')
+                print(target_text)
+
+            # Tokenize input and target while ensuring consistency in length
+            inputs = tokenizer(prompt, return_tensors="pt", truncation=True, max_length=max_length, padding="max_length")
+            targets = tokenizer(target_text, return_tensors="pt", truncation=True, max_length=max_length, padding="max_length")
+
+            inputs_arr.append(inputs.input_ids[0])
+            labels_arr.append(targets.input_ids[0])
+
+    return torch.stack(inputs_arr), torch.stack(labels_arr).long() 
+
 
 if __name__ == '__main__':
 

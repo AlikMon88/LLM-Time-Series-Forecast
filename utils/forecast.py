@@ -94,5 +94,20 @@ def generate_forecast(model, prompt, tokenizer, max_new_tokens=100):
     generated_text = tokenizer.decode(outputs[0][inputs.input_ids.shape[1]:], skip_special_tokens=True)
     return generated_text.strip()
 
+def generate_forecast_v2(model, history, tokenizer, inf_max_new_tokens = 100):
+
+    instruction = "Predict the next prey and predator populations based on the historical data."
+    history_text = "".join(history)
+    
+    prompt = f"<|im_start|>user\n{instruction}\nHistorical data: {history_text}<|im_end|>\n<|im_start|>assistant\n"
+    
+    print('PROMPT-ED:')
+    print(prompt)
+
+    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    outputs = model.generate(**inputs, max_new_tokens=inf_max_new_tokens, temperature=0.2)
+    
+    return tokenizer.decode(outputs[0], skip_special_tokens=False)
+
 if __name__ == '__main__':
     print('... __forecast.py__ ...')
