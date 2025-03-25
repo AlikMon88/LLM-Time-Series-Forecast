@@ -124,13 +124,8 @@ def process_sequences(texts, tokenizer, max_length=256, stride=128): #stride(128
 
     return torch.stack(all_input_ids)
 
-import torch
-
-def preprocess_sequences_v2(time_series_data, tokenizer, max_length=512):
-    """
-    This function formulates the problem in a target -> label {Supervised Manner}.
-    """
-
+def preprocess_sequences_v2(time_series_data, tokenizer, forecast_length=5, max_length=512):
+    
     inputs_arr = []
     labels_arr = []
 
@@ -138,12 +133,12 @@ def preprocess_sequences_v2(time_series_data, tokenizer, max_length=512):
         # Split into historical data and target (future) data
         data_points = series.split(';')
 
-        for i in range(len(data_points) - 1):  # -1 because we need at least one point for prediction
+        for i in range(len(data_points) - forecast_length):  # Ensure we have enough data for forecasting
             # Use sliding window approach for training examples
             history_length = min(5, i + 1)  # Use up to 5 previous points as context
 
             history = data_points[max(0, i + 1 - history_length) : i + 1]
-            target = data_points[i + 1]
+            target = data_points[i + 1:i + 1 + forecast_length]  # Get the next `forecast_length` data points
 
             # Format as instruction prompt
             instruction = "Predict the next prey and predator populations based on the historical data."
@@ -151,7 +146,8 @@ def preprocess_sequences_v2(time_series_data, tokenizer, max_length=512):
 
             # Create full prompt in Qwen's expected format
             prompt = f"<|im_start|>user\n{instruction}\nHistorical data: {history_text}<|im_end|>\n<|im_start|>assistant\n"
-            target_text = f"{target.strip()}<|im_end|>"
+            target_text = " ".join(target)  # Join the forecasted values as a space-separated string
+            target_text = f"{target_text.strip()}<|im_end|>"
 
             if i == 5 and num == 5:
                 print('---- Example-Prompt ----\n')
@@ -167,7 +163,7 @@ def preprocess_sequences_v2(time_series_data, tokenizer, max_length=512):
             inputs_arr.append(inputs.input_ids[0])
             labels_arr.append(targets.input_ids[0])
 
-    return torch.stack(inputs_arr), torch.stack(labels_arr).long() 
+    return torch.stack(inputs_arr), torch.stack(labels_arr).long()
 
 
 if __name__ == '__main__':

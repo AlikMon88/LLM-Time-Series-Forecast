@@ -1,5 +1,9 @@
 When you submit a batch job on an HPC system, like the one you're using, you typically receive a job ID (in this case, `7418348`) after submitting the job. Now, the job will be queued and eventually run on a compute node. Here's what you should do next:
 
+To submit a job:
+
+    python lora_train.py
+
 Check Job Status:
 
    squeue --job 7418348
