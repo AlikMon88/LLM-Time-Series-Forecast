@@ -9,6 +9,7 @@ training_steps: 10
 learning_rate: 0.001  # 1e-5
 forecast_length: 10
 max_tokens: 512  # Same as seq_length
+val_limit : 10
 
 train_split: 0.03
 time_step_split: 0.8

@@ -1,7 +1,7 @@
 import numpy as np
-from src.forecast import *
-from src.preprocess import *
-from src.data_create import *
+from forecast import *
+from preprocess import *
+from data_create import *
 import random
 
 def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, is_forecast = False):

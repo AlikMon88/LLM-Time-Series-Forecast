@@ -1,0 +1,25 @@
+When you submit a batch job on an HPC system, like the one you're using, you typically receive a job ID (in this case, `7418348`) after submitting the job. Now, the job will be queued and eventually run on a compute node. Here's what you should do next:
+
+Check Job Status:
+
+   squeue --job 7418348
+
+This will give you information about the job's current state (whether it's running, pending, etc.).
+
+Monitor Logs:
+   
+   tail -f /path/to/output.log
+   tail -f /path/to/error.log
+   
+   Adjust the paths based on where you have specified your output and error logs in the batch script.
+
+Check Completed Jobs:
+   squeue --job 7418348
+   
+   Or you can check the completed jobs in the job history with:
+   
+   sacct -j 7418348
+
+Cancel a job
+
+    scancel 7418348

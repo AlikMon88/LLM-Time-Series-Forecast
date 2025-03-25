@@ -17,4 +17,4 @@ module load cuda/11.7   # Load CUDA (change version if needed)
 source /user/am3353/am3353/m2-env/bin/activate
 
 # Run your script
-python my_script.py --arg1 value1 --arg2 value2
+python lora_train.py
