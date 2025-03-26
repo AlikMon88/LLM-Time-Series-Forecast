@@ -1,8 +1,14 @@
 When you submit a batch job on an HPC system, like the one you're using, you typically receive a job ID (in this case, `7418348`) after submitting the job. Now, the job will be queued and eventually run on a compute node. Here's what you should do next:
 
+Default memory is 8GiGs
+
 To submit a job:
 
-    python lora_train.py
+    sbatch run/gpu_batch.sh
+
+Check Job ID/Active Jobs:
+
+   squeue -u $USER
 
 Check Job Status:
 
@@ -27,3 +33,7 @@ Check Completed Jobs:
 Cancel a job
 
     scancel 7418348
+
+Check JOB history
+
+   sacct -u $USER --starttime=2025-03-25

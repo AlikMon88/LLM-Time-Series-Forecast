@@ -27,12 +27,17 @@ from accelerate import Accelerator
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu' 
 print('Device-activated: ', device)
-file_path = "../data/lotka_volterra_data.h5"
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+file_path = os.path.join(script_dir, "../data/lotka_volterra_data.h5")
+file_path = os.path.abspath(file_path)  # Ensure it's absolute  
+config_path = os.path.join(script_dir, "config.yaml")
 
 # Define LoRATrainer class
 class LoRATrainer():
-    def __init__(self, config_path='config.yaml'):
-        with open(config_path, "r") as file:
+    def __init__(self):
+        with open(config_path) as file:
             manual_config = yaml.safe_load(file)
         
         self.train_split = manual_config['train_split']
@@ -183,7 +188,7 @@ class LoRATrainer():
         lt = time.time()
         print('Time taken:', (lt - ft) / 60, 'mins')
 
-        return model_lora.eval(), train_curve, val_curve
+        return model_lora.eval(), train_curve, val_curve, self.target_steps
 
 
 if __name__ == '__main__':
@@ -191,7 +196,7 @@ if __name__ == '__main__':
 
     # Initialize LoRATrainer and start training
     lora = LoRATrainer()
-    _, train_curve, val_curve = lora.train()
+    _, train_curve, val_curve, target_steps = lora.train()
 
     # Plotting the loss curves
     plt.plot(range(len(train_curve)), train_curve, color='red', marker='.', label='Train')
@@ -206,6 +211,6 @@ if __name__ == '__main__':
     plt.grid()
 
     # Save plot
-    plt.savefig('../saves/loss_curve.png')
+    plt.savefig(f'../saves/loss_curve_s_{target_steps}.png')
 
     plt.show()

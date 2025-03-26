@@ -37,46 +37,15 @@ class FLOPSCounter:
     """
     
     def __init__(self, config: ModelConfig):
-        """
-        Initialize the FLOPS counter with model configuration.
-        
-        Args:
-            config (ModelConfig): Configuration of the Qwen2.5-Instruct model.
-        """
         self.config = config
         
     def matrix_multiply_flops(self, m: int, n: int, p: int):
-        """
-        Calculate FLOPS for matrix multiplication of shape (m, n) x (n, p).
-        
-        Each element of the resulting matrix requires n multiplications and n-1 additions.
-        
-        Args:
-            m: First dimension of first matrix
-            n: Second dimension of first matrix / First dimension of second matrix
-            p: Second dimension of second matrix
-            
-        Returns:
-            int: Number of FLOPS
-        """
         # Each element requires n multiplications and n-1 additions
         flops_per_element = 2 * n - 1
         total_elements = m * p
         return total_elements * flops_per_element
     
     def layer_norm_flops(self, elements: int):
-        """
-        Calculate FLOPS for RMSNorm operation.
-        
-        RMSNorm is similar to LayerNorm but only uses the scale normalization, not the shift.
-        It computes: x * scale / sqrt(mean(x²) + ε)
-        
-        Args:
-            elements: Number of elements in the input tensor
-            
-        Returns:
-            int: Number of FLOPS
-        """
         # For each element: 
         # - Compute square: 1 multiplication
         # - Sum of squares: elements-1 additions
@@ -95,19 +64,6 @@ class FLOPSCounter:
         return flops_square + flops_sum + flops_division + flops_sqrt + flops_normalize + flops_scale
     
     def swiglu_flops(self, elements: int):
-        """
-        Calculate FLOPS for SwiGLU activation function.
-        
-        SwiGLU(x, W, V, b, c) = Swish(xW + b) ⊗ (xV + c)
-        where Swish(x) = x * sigmoid(x)
-        and sigmoid(x) = 1 / (1 + exp(-x))
-        
-        Args:
-            elements: Number of elements in the input tensor
-            
-        Returns:
-            int: Number of FLOPS
-        """
         # For each element:
         # Sigmoid: exp(-x) + addition + division = 10 + 1 + 1 = 12
         # Swish: sigmoid(x) * x = 1 multiplication
@@ -120,15 +76,6 @@ class FLOPSCounter:
         return flops_sigmoid + flops_swish + flops_multiply
     
     def self_attention_flops(self):
-        """
-        Calculate FLOPS for self-attention mechanism including Grouped Query Attention.
-        
-        Args:
-            None
-            
-        Returns:
-            int: Number of FLOPS
-        """
         hidden_size = self.config.hidden_size
         seq_length = self.config.seq_length
         batch_size = self.config.batch_size
@@ -182,15 +129,6 @@ class FLOPSCounter:
         return total_flops
     
     def mlp_flops(self):
-        """
-        Calculate FLOPS for the MLP block with SwiGLU activation.
-        
-        Args:
-            None
-            
-        Returns:
-            int: Number of FLOPS
-        """
         hidden_size = self.config.hidden_size
         intermediate_size = self.config.intermediate_size
         seq_length = self.config.seq_length
@@ -212,33 +150,12 @@ class FLOPSCounter:
         return gate_proj_flops + up_proj_flops + swiglu_flops + down_proj_flops
     
     def embedding_flops(self):
-        """
-        Calculate FLOPS for token embedding and position encoding.
-        
-        Embedding lookup is 0 FLOPS (just memory access).
-        Only the addition of positional encoding counts.
-        
-        Args:
-            None
-            
-        Returns:
-            int: Number of FLOPS
-        """
         # Adding positional embeddings: batch_size * seq_length * hidden_size additions
         pos_embedding_flops = self.config.batch_size * self.config.seq_length * self.config.hidden_size
         
         return pos_embedding_flops
     
     def transformer_layer_flops(self):
-        """
-        Calculate FLOPS for a single transformer layer.
-        
-        Args:
-            None
-            
-        Returns:
-            int: Number of FLOPS
-        """
         hidden_size = self.config.hidden_size
         seq_length = self.config.seq_length
         batch_size = self.config.batch_size
@@ -265,15 +182,6 @@ class FLOPSCounter:
                pre_mlp_norm_flops + mlp_flops + residual2_flops
     
     def final_layer_flops(self):
-        """
-        Calculate FLOPS for the final layer norm and unembedding.
-        
-        Args:
-            None
-            
-        Returns:
-            int: Number of FLOPS
-        """
         hidden_size = self.config.hidden_size
         seq_length = self.config.seq_length
         batch_size = self.config.batch_size
@@ -289,15 +197,6 @@ class FLOPSCounter:
         return final_norm_flops + lm_head_flops
     
     def forward_pass_flops(self):
-        """
-        Calculate total FLOPS for a forward pass through the model.
-        
-        Args:
-            None
-            
-        Returns:
-            int: Number of FLOPS
-        """
         # Embedding
         embedding_flops = self.embedding_flops()
         
@@ -310,57 +209,19 @@ class FLOPSCounter:
         return embedding_flops + layers_flops + final_flops
     
     def training_step_flops(self):
-        """
-        Calculate total FLOPS for a training step (forward + backward).
-        
-        According to the coursework, we assume backward pass is 2x the forward pass.
-        
-        Args:
-            None
-            
-        Returns:
-            int: Number of FLOPS
-        """
         forward_flops = self.forward_pass_flops()
         backward_flops = 2 * forward_flops
         
         return forward_flops + backward_flops
     
     def inference_flops(self):
-        """
-        Calculate FLOPS for inference (just forward pass).
-        
-        Args:
-            None
-            
-        Returns:
-            int: Number of FLOPS
-        """
         return self.forward_pass_flops()
     
     def training_epoch_flops(self, num_samples: int):
-        """
-        Calculate FLOPS for training over a full epoch.
-        
-        Args:
-            num_samples: Number of training samples in the epoch
-            
-        Returns:
-            int: Number of FLOPS
-        """
         return self.training_step_flops() * (num_samples // self.config.batch_size)
     
     def lora_training_step_flops(self, lora_rank: int, num_lora_modules: int):
-        """
-        Calculate FLOPS for a LoRA training step.
         
-        Args:
-            lora_rank: Rank of the LoRA matrices
-            num_lora_modules: Number of modules with LoRA applied
-            
-        Returns:
-            int: Number of FLOPS
-        """
         # Forward pass is the same as regular forward pass
         forward_flops = self.forward_pass_flops()
         
@@ -396,18 +257,7 @@ class FLOPSCounter:
     
     def summary(self, training: bool = True, lora: bool = False, lora_rank: int = 4, 
                 num_lora_modules: int = None):
-        """
-        Generate a summary of FLOPS for different model operations.
         
-        Args:
-            training: Whether to include training FLOPS
-            lora: Whether to use LoRA training
-            lora_rank: Rank for LoRA matrices if lora=True
-            num_lora_modules: Number of modules with LoRA applied
-            
-        Returns:
-            Dict[str, int]: Dictionary with FLOPS breakdown
-        """
         if num_lora_modules is None:
             # By default, assume LoRA is applied to Q and V in each layer
             num_lora_modules = 2 * self.config.num_hidden_layers
@@ -436,16 +286,7 @@ class FLOPSCounter:
 
 ## Qwen2.5-0.5B-Instruct config parameters
 def get_qwen_0_5b_config(manual_config):
-    """
-    Get Qwen2.5-0.5B-Instruct model configuration.
     
-    Args:
-        seq_length: Sequence length for input
-        batch_size: Batch size for processing
-        
-    Returns:
-        ModelConfig: Configuration object
-    """
     model, _ = load_qwen()
     config = model.config
 
@@ -465,21 +306,6 @@ def get_qwen_0_5b_config(manual_config):
 
 
 def calculate_total_flops_experiment(manual_config, lora=False, is_training=True):
-    """
-    Calculate total FLOPS for an experiment.
-    
-    Args:
-        model_size: Size of the model ("0.5b", "1.5b", "7b")
-        context_length: Length of input sequence
-        batch_size: Batch size
-        lora: Whether to use LoRA training
-        lora_rank: Rank for LoRA matrices if lora=True
-        training_steps: Number of training steps/iterations
-        is_training: Whether it's a training experiment, otherwise inference
-        
-    Returns:
-        int: Total FLOPS for the experiment
-    """
     
     config = get_qwen_0_5b_config(manual_config)
     
@@ -522,12 +348,6 @@ def calculate_total_flops_experiment(manual_config, lora=False, is_training=True
 
 
 def print_experiment_flops_table(experiments):
-    """
-    Print a table of FLOPS for various experiments.
-    
-    Args:
-        experiments: List of experiment configurations (list of tuples)
-    """
     
     for exp in experiments:
         config, lora, training = exp  # Unpacking tuple
@@ -587,6 +407,7 @@ if __name__ == "__main__":
         print(f"{key}: {value:,}")
     
     # Example experiments for FLOPS table
+    ### Per train-step (foward + Backward) = 1.3 x 10^12 FLOPS (at max_tokens = 512, lora_rank = 4)
     experiments = [
     [{"model_size": "0.5b", "seq_length": 128, "batch_size": 8, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
     [{"model_size": "0.5b", "seq_length": 512, "batch_size": 8, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],

@@ -1,10 +1,15 @@
 import numpy as np
 import random
 
-if not __name__ == '__main__':
-    from .forecast import *
-    from .preprocess import *
-    from .data_create import *
+from forecast import *
+from preprocess import *
+from data_create import *
+    
+### When Running from IPY-Notebook
+# if not __name__ == '__main__':
+#     from .forecast import *
+#     from .preprocess import *
+#     from .data_create import *
 
 def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, forecast_length = 5, is_forecast = False):
 
@@ -41,7 +46,8 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
     
 
 if __name__ == '__main__':
-    from forecast import *
-    from preprocess import *
-    from data_create import *
+    prepare_data()
+    # from forecast import *
+    # from preprocess import *
+    # from data_create import *
     
