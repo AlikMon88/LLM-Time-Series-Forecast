@@ -8,6 +8,13 @@ from itertools import product
 # Import the LoRATrainer from your existing script
 from __lora_train__ import LoRATrainer
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+config_path = os.path.join(script_dir, 'config.yaml')
+        
+# Create directory for hyperparameter results
+hyper_save_dir = os.path.join(script_dir, '../saves/hyper/')
+hyper_save_dir = os.path.abspath(hyper_save_dir)
+    
 def run_hyperparameter_search():
     # Hyperparameter grid
     learning_rates = [1e-5, 5e-5, 4e-4]
@@ -17,8 +24,6 @@ def run_hyperparameter_search():
     # Track results
     results = []
     
-    # Create directory for hyperparameter results
-    hyper_save_dir = '../saves/hyper/'
     os.makedirs(hyper_save_dir, exist_ok=True)
     
     # Hyperparameter search
@@ -27,7 +32,6 @@ def run_hyperparameter_search():
         print(f"Learning Rate: {lr}, LoRA Rank: {rank}, Context Length: {ctx_len}")
         
         # Modify config for each run
-        config_path = '../config.yaml'
         with open(config_path, 'r') as file:
             config = yaml.safe_load(file)
         
@@ -36,7 +40,7 @@ def run_hyperparameter_search():
         config['lora_rank'] = rank
         config['seq_length'] = ctx_len
         config['max_tokens'] = ctx_len
-        config['training_steps'] = 10  # Fixed training steps for comparison (NEED: 10k steps)
+        config['training_steps'] = 5  # Fixed training steps for comparison (NEED: 10k steps)
         
         # Save modified config
         run_config_path = os.path.join(hyper_save_dir, f'config_lr{lr}_rank{rank}_ctx{ctx_len}.yaml')

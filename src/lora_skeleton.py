@@ -106,7 +106,7 @@ while steps < 10000:
     progress_bar = tqdm(train_loader, desc=f"Steps {steps}")
     for (batch,) in progress_bar:
         optimizer.zero_grad()
-        outputs = model(batch, labels=batch)
+        outputs = model(batch, labels=batch) ### Decoder-only model automatically applies prediction-masks while inferencing with the unmasked input as ouptut
         loss = outputs.loss
         accelerator.backward(loss)
         optimizer.step()

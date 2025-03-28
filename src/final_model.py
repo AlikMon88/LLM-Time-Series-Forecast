@@ -7,10 +7,17 @@ import matplotlib.pyplot as plt
 # Import the LoRATrainer from your existing script
 from __lora_train__ import LoRATrainer
 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+result_path = '../saves/hyper/hyperparameter_results.json'
+result_path = os.path.join(script_dir, result_path)
+result_path = os.path.abspath(result_path)
+
+final_config_path = os.path.join(script_dir, '../saves')
+final_config_path = os.path.abspath(final_config_path)    
+
 def train_final_model():
     # Load best hyperparameters from previous search
-    hyper_save_dir = '../saves/hyper/'
-    results_path = os.path.join(hyper_save_dir, 'hyperparameter_results.json')
     
     with open(results_path, 'r') as f:
         results = json.load(f)
@@ -27,7 +34,6 @@ def train_final_model():
     config['training_steps'] = 30000
     
     # Save updated config
-    final_config_path = os.path.join('../saves', 'final_model_config.yaml')
     with open(final_config_path, 'w') as file:
         yaml.dump(config, file)
     
