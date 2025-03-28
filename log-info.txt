@@ -37,3 +37,12 @@ Cancel a job
 Check JOB history
 
    sacct -u $USER --starttime=2025-03-25
+
+To fetch a single file from connected remote repo
+
+   git clone --no-checkout git@gitlab.developers.cam.ac.uk:phy/data-intensive-science-mphil/assessments/m2_coursework/am3353.git
+   cd am3353
+   git sparse-checkout init
+   git sparse-checkout set main_lora.ipynb
+   git checkout
+
