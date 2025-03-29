@@ -137,7 +137,7 @@ class LoRATrainer():
         best_model_path = os.path.join(checkpoint_dir, "best_model.pt")
 
         if self.target_steps > 20:
-            check_freq = self.target_steps // 2 ## Reducing save-checkpoints
+            check_freq = self.target_steps // 4 ## Reducing save-checkpoints
         else:
             check_freq = 5
 
@@ -165,24 +165,24 @@ class LoRATrainer():
                 progress_bar.set_postfix(loss=loss.item())
 
                 '''
-                Checkpointing - Memory bottleneck (max capped at 2)
+                Checkpointing - Secondary Memory Quota is 50GB
                 '''
                 # Save checkpoint based on frequency (every 'check_freq' steps in this case)
-                # if train_steps % check_freq == 0:
-                #     checkpoint_path = os.path.join(checkpoint_dir, f"lora_step_{train_steps}.pt")
+                if train_steps % check_freq == 0:
+                    checkpoint_path = os.path.join(checkpoint_dir, f"lora_step_{train_steps}.pt")
                     
-                #     # Save LoRA adapter weights
-                #     model_lora.save_pretrained(checkpoint_path)
+                    # Save LoRA adapter weights
+                    model_lora.save_pretrained(checkpoint_path)
                     
-                #     # Save optimizer state
-                #     opt_path = os.path.join(checkpoint_dir, f"optimizer_step_{train_steps}.pt")
-                #     try:
-                #         torch.save(optimizer.state_dict(), opt_path)
-                #         print(f"Checkpoint saved at step {train_steps}")
+                    # Save optimizer state
+                    opt_path = os.path.join(checkpoint_dir, f"optimizer_step_{train_steps}.pt")
+                    try:
+                        torch.save(optimizer.state_dict(), opt_path)
+                        print(f"Checkpoint saved at step {train_steps}")
 
-                #     except (OSError, RuntimeError, IOError) as e:
-                #         print(f"Warning: Could not save file {opt_path}. Continuing execution...")
-                #         print(f"Error: {e}")
+                    except (OSError, RuntimeError, IOError) as e:
+                        print(f"Warning: Could not save file {opt_path}. Continuing execution...")
+                        print(f"Error: {e}")
 
                 if train_steps % plot_freq == 0:
 

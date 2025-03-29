@@ -3,6 +3,7 @@ import json
 import yaml
 import torch
 import matplotlib.pyplot as plt
+import time
 
 # Import the LoRATrainer from your existing script
 from lora_train import LoRATrainer
@@ -47,9 +48,18 @@ def train_final_model():
     # Initialize trainer with best configuration
     lora_trainer = LoRATrainer(config_path=best_config_path)
     
+    ft = time.time()
+    
     # Train final model
     final_model, train_curve, val_curve, target_steps = lora_trainer.train()
     
+    lt = time.time()
+    
+    print('Time taken:', (lt - ft) / 60, 'mins')
+    
+    final_model_path = os.path.join(save_dir, "best_final_model.pt")
+    final_model.save_pretrained(final_model_path)
+
     # Create comprehensive loss plot
     plt.figure(figsize=(12, 6))
     plt.plot(train_curve, label='Train Loss', color='red', alpha=0.7)

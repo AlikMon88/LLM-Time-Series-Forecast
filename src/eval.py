@@ -29,22 +29,6 @@ def compute_forecasting_metrics(true_data, predicted_data):
     # R² Score
     metrics['R2'] = r2_score(true_data, predicted_data)
     
-    # Correlation Metrics
-    metrics['Pearson_Correlation'], metrics['Pearson_P_Value'] = stats.pearsonr(true_data, predicted_data)
-    metrics['Spearman_Correlation'], metrics['Spearman_P_Value'] = stats.spearmanr(true_data, predicted_data)
-    
-    # Phase Synchronization
-    # Compute phase difference between true and predicted signals
-    true_phase = np.unwrap(np.angle(np.fft.fft(true_data)))
-    pred_phase = np.unwrap(np.angle(np.fft.fft(predicted_data)))
-    metrics['Phase_Shift_Error'] = np.mean(np.abs(true_phase - pred_phase))
-    
-    # Forecast Skill Score
-    # Compare against a naive forecast (e.g., mean or last value)
-    naive_forecast = np.full_like(true_data, np.mean(true_data))
-    naive_mse = mean_squared_error(true_data, naive_forecast)
-    metrics['Forecast_Skill_Score'] = 1 - (metrics['MSE'] / naive_mse)
-    
     return metrics
 
 def visualize_forecast_comparison(true_data, predicted_data, save_path='../saves/forecast_comparison.png'):

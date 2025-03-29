@@ -64,11 +64,6 @@ class FLOPSCounter:
         return flops_square + flops_sum + flops_division + flops_sqrt + flops_normalize + flops_scale
     
     def swiglu_flops(self, elements: int):
-        # For each element:
-        # Sigmoid: exp(-x) + addition + division = 10 + 1 + 1 = 12
-        # Swish: sigmoid(x) * x = 1 multiplication
-        # Elementwise multiplication for SwiGLU: 1 multiplication
-        
         flops_sigmoid = elements * 12  # 1/(1+exp(-x))
         flops_swish = elements  # x * sigmoid(x)
         flops_multiply = elements  # elementwise multiplication

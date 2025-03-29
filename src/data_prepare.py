@@ -29,7 +29,7 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
     prey_pred_encoded = np.array(prey_pred_encoded)
     
     data_train, data_test = prey_pred_encoded[:int(train_split * len(prey_pred_encoded))], prey_pred_encoded[int(train_split * len(prey_pred_encoded)):]  
-    data_test = data_test[:int(0.5*len(data_train))]
+    # data_test = data_test[:int(0.5*len(data_train))]
 
     ''' process_sequences_v2 - has a localized context-window of 5 time-steps + fixed instruction tokenization '''
     # train_input_ids, train_target_ids = preprocess_sequences_v2(data_train, tokenizer, forecast_length, max_ctx_length) ## Its past-future chunking almost 80 times within 100 nested iteration
@@ -55,7 +55,7 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
         # return train_input_ids, train_target_ids, val_input_ids, val_target_ids, prey_os, pred_os
     
     if is_forecast:
-        return train_input_ids, val_input_ids, prey_os, pred_os, prey_pred_encoded
+        return train_input_ids, val_input_ids, prey_os, pred_os, data_test
     else:
         return train_input_ids, val_input_ids, prey_os, pred_os
 
