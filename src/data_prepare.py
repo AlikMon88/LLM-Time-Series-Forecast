@@ -5,7 +5,7 @@ from forecast import *
 from preprocess import *
 from data_create import *
     
-### When Running from IPY-Notebook
+### When Running from IPY-Notebook (CHANGE THIS)
 # if not __name__ == '__main__':
 #     from .forecast import *
 #     from .preprocess import *
@@ -55,7 +55,7 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
         # return train_input_ids, train_target_ids, val_input_ids, val_target_ids, prey_os, pred_os
     
     if is_forecast:
-        return train_input_ids, val_input_ids, prey_os, pred_os, prey_pred_encoded[random.randint(0, len(prey_pred_encoded) - 1)]
+        return train_input_ids, val_input_ids, prey_os, pred_os, prey_pred_encoded
     else:
         return train_input_ids, val_input_ids, prey_os, pred_os
 

@@ -1,6 +1,7 @@
 import numpy as np
 import re
 import random
+import torch
 
 def create_forecast_prompt_sep(encoded_series, forecast_length=10, name='prey'):
     
@@ -77,10 +78,13 @@ def extract_forecasts(forecast_output, model_type='llama'):
 
 
 # Generate forecasts
-def generate_forecast(model, prompt, tokenizer, max_new_tokens=100):
+def generate_forecast(model, prompt, tokenizer, max_new_tokens=100, is_tokenized = False):
 
-    inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-    
+    if not is_tokenized:
+        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+    else:
+        inputs = {'input_ids': prompt.to(model.device)}
+
     # Set parameters for more deterministic generation
     outputs = model.generate(
         **inputs,
@@ -91,10 +95,10 @@ def generate_forecast(model, prompt, tokenizer, max_new_tokens=100):
     )
     
     # Extract only the newly generated tokens
-    generated_text = tokenizer.decode(outputs[0][inputs.input_ids.shape[1]:], skip_special_tokens=True)
+    generated_text = tokenizer.decode(outputs[0][inputs['input_ids'].shape[1]:], skip_special_tokens=True)
     return generated_text.strip()
 
-def generate_forecast_v2(model, history, tokenizer, inf_max_new_tokens = 100):
+def generate_forecast_v2(model, history, tokenizer, inf_max_new_tokens = 100, temperature=0.1):
 
     instruction = "Predict the next prey and predator populations based on the historical data."
     history_text = "".join(history)
@@ -105,9 +109,55 @@ def generate_forecast_v2(model, history, tokenizer, inf_max_new_tokens = 100):
     print(prompt)
 
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-    outputs = model.generate(**inputs, max_new_tokens=inf_max_new_tokens, temperature=0.2)
+    outputs = model.generate(
+        **inputs, 
+        max_new_tokens=inf_max_new_tokens, 
+        temperature=temperature, 
+        do_sample=True,
+        pad_token_id=tokenizer.eos_token_id
+    )
     
-    return tokenizer.decode(outputs[0], skip_special_tokens=False)
+    return tokenizer.decode(outputs[0], skip_special_tokens=False)[len(prompt):]
+
+def generate_forecast_v3(model, chunks, tokenizer, max_new_tokens, temperature=0.1, is_tokenized=True):
+    
+    '''
+    Recursive Forecasting based on process_sequences chunking 
+    '''   
+    
+    predictions = []
+    context = None  # To keep track of the previous context
+    
+    for chunk_idx, chunk in enumerate(chunks):
+        # If tokenized input is passed, use it
+        if is_tokenized:
+            inputs = {'input_ids': torch.unsqueeze(chunk, axis=0)}  # Assume chunk is already tokenized
+        else:
+            inputs = tokenizer(chunk, return_tensors='pt', padding=True, truncation=True).to(model.device)
+
+        # If this is not the first chunk, append previous predictions to the current input
+        if context is not None:
+            inputs['input_ids'] = torch.cat([context, inputs['input_ids']], dim=-1)
+
+        # Generate the next tokens (future timesteps)
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            temperature=temperature,
+            do_sample=True,
+            pad_token_id=tokenizer.eos_token_id
+        )
+
+        # Decode the newly generated tokens (after the original context)
+        generated_sequence = tokenizer.decode(outputs[0][inputs['input_ids'].shape[1]:], skip_special_tokens=True)
+        predictions.append(generated_sequence)
+
+        # Update context to include the newly generated tokens for the next chunk
+        # For overlapping chunks, we include the last portion of the previous output as context for the next one
+        context = outputs[:, -inputs['input_ids'].shape[-1]:]  # Keep only the last part of the chunk
+        
+
+    return predictions
 
 if __name__ == '__main__':
     print('... __forecast.py__ ...')

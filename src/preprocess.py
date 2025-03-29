@@ -103,13 +103,17 @@ def ts_decoding(tokenized_series, model_type="llama", precision=3, offsets=None,
         return result
 
 # Modified tokenization with chunking
-def process_sequences(texts, tokenizer, max_length=256, stride=128): #stride(128)-token overlap between consecutive chunks, helping models retain context better.
+def process_sequences(texts, tokenizer, max_length=256, stride=128, is_inference = False): #stride(128)-token overlap between consecutive chunks, helping models retain context better.
 
     all_input_ids = []
     for text in texts:
 
         encoding = tokenizer(text, return_tensors="pt", add_special_tokens=False)
         seq_ids = encoding.input_ids[0]
+        
+        if is_inference:
+            print('Seq-IDs: ')
+            print(seq_ids.shape)
 
         for i in range(0, len(seq_ids), stride):
             chunk = seq_ids[i : i + max_length]

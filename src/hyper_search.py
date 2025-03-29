@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from itertools import product
 
 # Import the LoRATrainer from your existing script
-from __lora_train__ import LoRATrainer
+from lora_train import LoRATrainer
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 config_path = os.path.join(script_dir, 'config.yaml')
@@ -14,12 +14,20 @@ config_path = os.path.join(script_dir, 'config.yaml')
 # Create directory for hyperparameter results
 hyper_save_dir = os.path.join(script_dir, '../saves/hyper/')
 hyper_save_dir = os.path.abspath(hyper_save_dir)
+
+images_dir = os.path.join(hyper_save_dir, 'images')
     
 def run_hyperparameter_search():
-    # Hyperparameter grid
+    
+    # # Hyperparameter grid
     learning_rates = [1e-5, 5e-5, 4e-4]
     lora_ranks = [2, 4, 8]
     context_lengths = [128, 512, 768]
+    
+    # Hyperparameter grid
+    # learning_rates = [1e-5]
+    # lora_ranks = [2]
+    # context_lengths = [128]
     
     # Track results
     results = []
@@ -39,8 +47,8 @@ def run_hyperparameter_search():
         config['learning_rate'] = lr
         config['lora_rank'] = rank
         config['seq_length'] = ctx_len
-        config['max_tokens'] = ctx_len
-        config['training_steps'] = 5  # Fixed training steps for comparison (NEED: 10k steps)
+        config['max_tokens'] = ctx_len ## Context-len needs to optimized for 2k steps
+        config['training_steps'] = 5000  # Fixed training steps for comparison (NEED: 10k steps)
         
         # Save modified config
         run_config_path = os.path.join(hyper_save_dir, f'config_lr{lr}_rank{rank}_ctx{ctx_len}.yaml')
@@ -75,7 +83,7 @@ def run_hyperparameter_search():
             plt.ylabel('Loss')
             plt.legend()
             plt.tight_layout()
-            plt.savefig(os.path.join(hyper_save_dir, f'loss_lr{lr}_rank{rank}_ctx{ctx_len}_s{steps}.png'))
+            plt.savefig(os.path.join(images_dir, f'loss_lr{lr}_rank{rank}_ctx{ctx_len}_s{steps}.png'))
             plt.close()
             
         except Exception as e:

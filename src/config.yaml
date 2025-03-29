@@ -1,6 +1,6 @@
 ## Training Hyperparameters
 seq_length: 512  # 32768 | We are not retraining the embedding layers (== context length) but that is exclusivevly for process_sequences_v1 (implementation) -- for v2 its (5)
-inf_max_tokens: 128
+inf_max_tokens: 15
 batch_size: 4
 lora_rank: 4
 hidden_layers: 8  # 24 is the trained-one forward | We are not retraining the hidden layers
@@ -11,5 +11,5 @@ forecast_length: 5
 max_tokens: 512  # Same as seq_length
 val_limit : 1
 
-train_split: 0.9
+train_split: 1.0
 time_step_split: 0.8
