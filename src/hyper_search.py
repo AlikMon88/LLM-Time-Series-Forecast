@@ -4,9 +4,11 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from itertools import product
+import json
+from pprint import pprint
 
-# Import the LoRATrainer from your existing script
 from lora_train import LoRATrainer
+from flops_counter import *
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
 config_path = os.path.join(script_dir, 'config.yaml')
@@ -16,15 +18,48 @@ hyper_save_dir = os.path.join(script_dir, '../saves/hyper/')
 hyper_save_dir = os.path.abspath(hyper_save_dir)
 
 images_dir = os.path.join(hyper_save_dir, 'images')
+
+### NEED: Count Flops for all these Operations -- 
+def hyper_flops_counter(r_config):
+    ## Each train step -- 1.3e12 --> 10K step 1.3e15 --> hyper_search --? 35.1e15 (3.5e16)
+    
+    config = get_qwen_0_5b_config(r_config)
+    
+    counter = FLOPSCounter(config)
+    
+    regular_summary = counter.summary(training=True, lora=False)
+    
+    lora_summary = counter.summary(training=True, lora=True, lora_rank=r_config["lora_rank"])
+    
+    # Print summaries
+    print("\nRegular Training FLOPS Summary:")
+    for key, value in regular_summary.items():
+        print(f"{key}: {value:,}")
+    
+    print()
+
+    print("\nLoRA Training FLOPS Summary:")
+    for key, value in lora_summary.items():
+        print(f"{key}: {value:,}")
+    
+    # Example experiments for FLOPS table
+    ### Per train-step (foward + Backward) = 1.3 x 10^12 FLOPS (at max_tokens = 512, lora_rank = 4)
+    experiments = [
+    [{"model_size": "0.5b", "seq_length": r_config['max_tokens'], "batch_size": r_config['batch_size'], "lora_rank": r_config['lora_rank'], "training_steps": r_config['training_steps'], 'hidden_layers' : r_config['hidden_layers']}, True, True]
+    ]
+
+    print()
+    print("\nFLOPS Counted:")
+    print_experiment_flops_table(experiments) 
+
     
 def run_hyperparameter_search():
     
-    # # Hyperparameter grid
+    # Hyperparameter grid
     learning_rates = [1e-5, 5e-5, 4e-4]
     lora_ranks = [2, 4, 8]
     context_lengths = [128, 512, 768]
     
-    # Hyperparameter grid
     # learning_rates = [1e-5]
     # lora_ranks = [2]
     # context_lengths = [128]
@@ -48,12 +83,17 @@ def run_hyperparameter_search():
         config['lora_rank'] = rank
         config['seq_length'] = ctx_len
         config['max_tokens'] = ctx_len ## Context-len needs to optimized for 2k steps
-        config['training_steps'] = 5000  # Fixed training steps for comparison (NEED: 10k steps)
+        config['training_steps'] = 1  # Fixed training steps for comparison (NEED: 10k steps)
         
         # Save modified config
         run_config_path = os.path.join(hyper_save_dir, f'config_lr{lr}_rank{rank}_ctx{ctx_len}.yaml')
         with open(run_config_path, 'w') as file:
             yaml.dump(config, file)
+        
+        # flops counting
+        print()
+        hyper_flops_counter(config)
+        print()
         
         # Initialize trainer with modified config
         lora_trainer = LoRATrainer(config_path=run_config_path)
@@ -83,6 +123,7 @@ def run_hyperparameter_search():
             plt.ylabel('Loss')
             plt.legend()
             plt.tight_layout()
+            plt.grid()
             plt.savefig(os.path.join(images_dir, f'loss_lr{lr}_rank{rank}_ctx{ctx_len}_s{steps}.png'))
             plt.close()
             
@@ -93,7 +134,6 @@ def run_hyperparameter_search():
     results.sort(key=lambda x: x['final_validation_loss'])
     
     # Save results
-    import json
     with open(os.path.join(hyper_save_dir, 'hyperparameter_results.json'), 'w') as f:
         json.dump(results, f, indent=4)
     
@@ -108,4 +148,4 @@ def run_hyperparameter_search():
     return best_config
 
 if __name__ == '__main__':
-    best_config = run_hyperparameter_search()
+    run_hyperparameter_search()

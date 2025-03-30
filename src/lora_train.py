@@ -199,11 +199,10 @@ class LoRATrainer():
 
                     plt.legend()
                     plt.grid()
-
+                    plt.title(f'Loss-Curve (Intermediate) - {train_steps} Optimization Steps')
                     fn_name = f'inter_loss_curve_t_{train_steps}.png' 
                     plt.savefig(os.path.join(plot_dir, fn_name))
-                    
-                    plt.show()
+                    plt.close()
 
                 ### Validation Loop
                 model_lora.eval()
@@ -219,12 +218,6 @@ class LoRATrainer():
                     # Calculate average validation loss
                     avg_val_loss = sum(val_losses) / len(val_losses)
                     val_curve.append(avg_val_loss)
-
-                    # # Save best model based on validation loss
-                    # if avg_val_loss < best_val_loss:
-                    #     best_val_loss = avg_val_loss
-                    #     model_lora.save_pretrained(best_model_path)
-                    #     print(f"New best model saved with validation loss: {best_val_loss:.4f}")
 
                 if train_steps >= self.target_steps:  # Stop training at the required steps
                     break
@@ -248,6 +241,8 @@ if __name__ == '__main__':
     lora = LoRATrainer()
     _, train_curve, val_curve, target_steps = lora.train()
 
+    fig = plt.figure(figsize=(7, 7))
+    
     # Plotting the loss curves
     plt.plot(range(len(train_curve)), train_curve, color='red', marker='.', label='Train')
     plt.plot(range(len(val_curve)), val_curve, color='blue', marker='.', label='Validation')
@@ -255,13 +250,11 @@ if __name__ == '__main__':
     plt.ylabel('Loss')
     plt.xlabel('#Optimization Steps')
 
-    plt.title('Loss-Curve')
+    plt.title(f'Loss-Curve (Final) - {target_steps} Optimization Steps')
 
     plt.legend()
     plt.grid()
-
     # Save plot
     fn_name = f'final_loss_curve_s_{target_steps}.png'
     plt.savefig(os.path.join(save_dir, fn_name))
-
-    plt.show()
+    plt.close()

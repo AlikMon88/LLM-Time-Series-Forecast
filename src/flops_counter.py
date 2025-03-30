@@ -404,9 +404,12 @@ if __name__ == "__main__":
     # Example experiments for FLOPS table
     ### Per train-step (foward + Backward) = 1.3 x 10^12 FLOPS (at max_tokens = 512, lora_rank = 4)
     experiments = [
-    [{"model_size": "0.5b", "seq_length": 128, "batch_size": 8, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
-    [{"model_size": "0.5b", "seq_length": 512, "batch_size": 8, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
-    [{"model_size": "0.5b", "seq_length": 768, "batch_size": 8, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True]
+    [{"model_size": "0.5b", "seq_length": 128, "batch_size": 4, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
+    [{"model_size": "0.5b", "seq_length": 512, "batch_size": 4, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
+    [{"model_size": "0.5b", "seq_length": 768, "batch_size": 4, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True], 
+    [{"model_size": "0.5b", "seq_length": 512, "batch_size": 4, "lora_rank": 2, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
+    [{"model_size": "0.5b", "seq_length": 512, "batch_size": 4, "lora_rank": 4, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
+    [{"model_size": "0.5b", "seq_length": 512, "batch_size": 4, "lora_rank": 8, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True]
     ]
 
     print("\nFLOPS for Different Experiments:")
