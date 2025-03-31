@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=m2-gwen-lora         # Change this to a meaningful name
+#SBATCH --job-name=m2-hyper-run         # Change this to a meaningful name
 #SBATCH --output=/home/am3353/am3353/log/output.log   # Change this path
 #SBATCH --error=/home/am3353/am3353/log/error.log     # Change this path
 #SBATCH --time=02:00:00               # Max execution time (HH:MM:SS)
