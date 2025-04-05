@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=m2-hyper-run         # Change this to a meaningful name
-#SBATCH --output=/home/am3353/am3353/log/output.log   # Change this path
-#SBATCH --error=/home/am3353/am3353/log/error.log     # Change this path
+#SBATCH --output=/home/am3353/am3353/log/hyper_run_output.log   # Change this path
+#SBATCH --error=/home/am3353/am3353/log/hyper_run_error.log     # Change this path
 #SBATCH --time=02:00:00               # Max execution time (HH:MM:SS)
 #SBATCH --partition=ampere            # GPU partition
 #SBATCH --gres=gpu:4                   # Request 1 GPU (adjust if needed)
@@ -13,4 +13,4 @@ module load cuda/11.8
 source /home/am3353/am3353/m2-env/bin/activate
 
 # Run your script
-python src/hyper_search.py
+python src/hyper_search.py 

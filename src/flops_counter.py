@@ -368,7 +368,7 @@ if __name__ == "__main__":
         'seq_length' : 512,
         'batch_size' : 8,
         'lora_rank' : 4,
-        'hidden_layers' : 10,
+        'hidden_layers' : 24,
         'model_size' : '0.5b',
         'training_steps' : 10000
     }

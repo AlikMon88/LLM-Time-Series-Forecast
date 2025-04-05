@@ -252,8 +252,8 @@ if __name__ == '__main__':
 
     plt.title(f'Loss-Curve (Final) - {target_steps} Optimization Steps')
 
-    plt.legend()
     plt.grid()
+    plt.legend()
     # Save plot
     fn_name = f'final_loss_curve_s_{target_steps}.png'
     plt.savefig(os.path.join(save_dir, fn_name))

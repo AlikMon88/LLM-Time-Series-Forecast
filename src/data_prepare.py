@@ -5,7 +5,7 @@ from forecast import *
 from preprocess import *
 from data_create import *
     
-### When Running from IPY-Notebook (CHANGE THIS)
+## When Running from IPY-Notebook (CHANGE THIS)
 # if not __name__ == '__main__':
 #     from .forecast import *
 #     from .preprocess import *
