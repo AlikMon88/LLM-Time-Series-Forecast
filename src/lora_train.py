@@ -94,11 +94,11 @@ class LoRATrainer():
         data_prey, data_prey_true, data_pred, data_pred_true = load_data(file_path, self.time_step_split, is_plot=False)
         print('LOG: (data-load-shape)')
         print(data_prey.shape, data_prey_true.shape, data_pred.shape, data_pred_true.shape)
-
+        
         train_input_ids, val_input_ids, self.prey_os, self.pred_os = prepare_data(data_prey, data_pred, self.tokenizer, self.max_ctx_length, self.train_split)
         print('LOG: (prepare-load-shape)')
         print(train_input_ids.shape,  val_input_ids.shape)
-
+                
         train_dataset = TensorDataset(train_input_ids)
         train_loader = DataLoader(train_dataset, batch_size=self.batch_size, shuffle=True)
 
@@ -131,10 +131,6 @@ class LoRATrainer():
         # Create checkpoint directory if it doesn't exist
         os.makedirs(checkpoint_dir, exist_ok=True)
         os.makedirs(plot_dir, exist_ok=True)
-
-        # For best model based on validation loss
-        best_val_loss = float('inf')
-        best_model_path = os.path.join(checkpoint_dir, "best_model.pt")
 
         if self.target_steps > 20:
             check_freq = self.target_steps // 4 ## Reducing save-checkpoints
@@ -225,7 +221,7 @@ class LoRATrainer():
                 model_lora.train()  # Resume training mode
 
         # Save final model after training
-        final_model_path = os.path.join(save_dir, "final_model.pt")
+        final_model_path = os.path.join(save_dir, "lora_model.pt")
         model_lora.save_pretrained(final_model_path)
 
         lt = time.time()

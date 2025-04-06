@@ -3,35 +3,42 @@ import torch
 import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+import random
+
+from forecast import *
+from preprocess import *
 
 def compute_forecasting_metrics(true_data, predicted_data):
-    """
-    Compute comprehensive forecasting metrics
     
-    Args:
-    true_data (np.ndarray): Ground truth time series data
-    predicted_data (np.ndarray): Model predicted time series data
+    true_prey, true_pred = true_data
+    predicted_prey, predicted_pred = predicted_data[:, 0, :], predicted_data[:, 1, :]
     
-    Returns:
-    dict: Dictionary of computed metrics
-    """
-    metrics = {}
+    metrics = {'Prey' : {}, 'Predator' : {}}
+    data_true = {'Prey': true_prey, 'Predator': true_pred}
+    data_predicted = {'Prey': predicted_prey, 'Predator': predicted_pred}
     
-    # Basic Regression Metrics
-    metrics['MAE'] = mean_absolute_error(true_data, predicted_data)
-    metrics['MSE'] = mean_squared_error(true_data, predicted_data)
-    metrics['RMSE'] = np.sqrt(metrics['MSE'])
-    metrics['MAPE'] = np.mean(np.abs((true_data - predicted_data) / true_data)) * 100
-    
-    # Normalized RMSE
-    metrics['NRMSE'] = metrics['RMSE'] / (np.max(true_data) - np.min(true_data))
-    
-    # R² Score
-    metrics['R2'] = r2_score(true_data, predicted_data)
+    for m in metrics:
+        
+        # Basic Regression Metrics
+        predicted = data_predicted[m]
+        true = data_true[m][:, :predicted.shape[-1]]
+        
+        print(predicted.shape, true.shape)
+        
+        metrics[m]['MAE'] = mean_absolute_error(true, predicted)
+        metrics[m]['MSE'] = mean_squared_error(true, predicted)
+        metrics[m]['RMSE'] = np.sqrt(metrics[m]['MSE'])
+        metrics[m]['MAPE'] = np.mean(np.abs((true - predicted) / true)) * 100
+        
+        # Normalized RMSE
+        metrics[m]['NRMSE'] = metrics[m]['RMSE'] / (np.max(true) - np.min(true))
+        
+        # R² Score
+        metrics[m]['R2'] = r2_score(true, predicted)
     
     return metrics
 
-def visualize_forecast_comparison(true_data, predicted_data, save_path='../saves/forecast_comparison.png'):
+def visualize_forecast_comparison(true_data, predicted_data, time_data, rn):
     """
     Create visualization comparing true and predicted trajectories
     
@@ -40,59 +47,58 @@ def visualize_forecast_comparison(true_data, predicted_data, save_path='../saves
     predicted_data (np.ndarray): Model predicted time series data
     save_path (str): Path to save the visualization
     """
+    time_data_true = time_data[-1]
+    
     plt.figure(figsize=(12, 6))
-    plt.plot(true_data, label='True Trajectory', color='blue')
-    plt.plot(predicted_data, label='Predicted Trajectory', color='red', linestyle='--')
-    plt.title('Trajectory Comparison')
-    plt.xlabel('Time Step')
-    plt.ylabel('Value')
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig(save_path)
-    plt.close()
+    
+    # plt.plot(time_data_past, true_data[check_rn].tolist(), label = 'Past Data')
+    plt.plot(time_data_true[:len(predicted_data[0])], predicted_data[0], label = 'Prediction (Prey)', marker = 'x')
+    plt.plot(time_data_true[:len(predicted_data[0])], true_data[0].tolist()[:len(predicted_data[0])], label = 'Truth (Prey)', marker = '.')
 
-def evaluate_lora_model(model, test_data, tokenizer, max_ctx_length):
-    """
-    Comprehensive model evaluation pipeline
+    # plt.plot(time_data_past, data_pred[check_rn].tolist(), label = 'Past Data')
+    plt.plot(time_data_true[:len(predicted_data[-1])], predicted_data[-1], label = 'Prediction (Predator)', marker = 'x')
+    plt.plot(time_data_true[:len(predicted_data[-1])], true_data[-1].tolist()[:len(predicted_data[-1])], label = 'Truth (Predator)', marker = '.')
+
+    plt.xlabel('time')
+    plt.title('Prey-Predator-Population (Forecast) (Pred-Cut)')
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+def evaluate_lora_modelevaluate_lora_model(model_lora, data_test, data_true, time_data, offset_scale, tokenizer, inf_max_token=21, is_instruction=False):
     
-    Args:
-    model (torch.nn.Module): Trained LoRA model
-    test_data (np.ndarray): Test dataset
-    tokenizer: Tokenizer used for model
-    max_ctx_length (int): Maximum context length
+    pred_batch = []
     
-    Returns:
-    dict: Comprehensive evaluation metrics
-    """
-    # Tokenize and prepare test data
-    test_input_ids = prepare_input_for_inference(test_data, tokenizer, max_ctx_length)
+    prey_os, pred_os = offset_scale
+    prey_os, pred_os = prey_os[-len(data_test):], pred_os[-len(data_test):]
     
-    # Generate predictions
-    model.eval()
-    with torch.no_grad():
-        predictions = model.generate(
-            test_input_ids, 
-            max_length=test_input_ids.shape[1] + 50,  # Generate additional steps
-            num_return_sequences=1
-        )
+    for i, test_prompt in enumerate(data_test):
+        if is_instruction:
+            test_prompt = create_forecast_prompt_joint(test_prompt, forecast_length=21, is_show = True)
+        
+        prey_pred_response = generate_forecast(model_lora, test_prompt, tokenizer, max_new_tokens=inf_max_token, temperature=0.1)
+        prey_decoded_response, pred_decoded_response = extract_forecasts(prey_pred_response)
+        prey_decoded_response = ts_decoding(prey_decoded_response, model_type="llama", precision=3, offsets=prey_os['offset'][i], scale_factors=prey_os['scale'][i])
+        pred_decoded_response = ts_decoding(pred_decoded_response, model_type="llama", precision=3, offsets=pred_os['offset'][i], scale_factors=pred_os['scale'][i])
+        
+        min_len = min(len(prey_decoded_response), len(pred_decoded_response))
+        ### This can be inhomogenous because the min_len can be different for different generations
+        # pred_batch.append([prey_decoded_response[:min_len], pred_decoded_response[:min_len]])
+        pred_batch.append([prey_decoded_response, pred_decoded_response])
     
-    # Decode predictions
-    decoded_predictions = tokenizer.decode(predictions[0])
+    ## for homogeneity
+    min_len = min([min(len(data[0]), len(data[-1])) for data in pred_batch])      
+    pred_batch = [[data[0][:min_len], data[-1][:min_len]] for data in pred_batch]
+    pred_batch = np.array(pred_batch)
+    metrics = compute_forecasting_metrics(data_true, pred_batch)
     
-    # Convert decoded predictions back to numerical format
-    predicted_data = convert_predictions_to_numerical(decoded_predictions)
-    
-    # Compute metrics
-    metrics = compute_forecasting_metrics(test_data, predicted_data)
-    
-    # Visualize comparison
-    visualize_forecast_comparison(test_data, predicted_data)
+    rn = random.randint(0, len(pred_batch[0]) - 1)
+    visualize_forecast_comparison([data_true[0][rn], data_true[-1][rn]], [pred_batch[0][rn], pred_batch[-1][rn]], time_data, rn)
     
     return metrics
 
+
 def main():
-    # Example usage (you'll need to adapt to your specific data loading)
-    from __lora_train__ import LoRATrainer
     
     # Load best model and configuration
     lora_trainer = LoRATrainer()

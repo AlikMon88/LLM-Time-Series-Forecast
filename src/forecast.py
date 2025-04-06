@@ -86,7 +86,7 @@ def extract_forecasts(forecast_output, model_type='llama'):
 def generate_forecast(model, prompt, tokenizer, max_new_tokens=100, temperature=0.1, is_tokenized=False):
 
     if not is_tokenized:
-        inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+        inputs = tokenizer(prompt, return_tensors="pt", add_special_tokens=False)
     else:
         inputs = {'input_ids': prompt.to(model.device)}
 
@@ -94,9 +94,8 @@ def generate_forecast(model, prompt, tokenizer, max_new_tokens=100, temperature=
     outputs = model.generate(
         **inputs,
         max_new_tokens=max_new_tokens,
-        temperature=0.1,  # Low temperature for more deterministic output
+        temperature=temperature,  # Low temperature for more deterministic output
         do_sample=True,
-        pad_token_id=tokenizer.eos_token_id
     )
     
     # Extract only the newly generated tokens

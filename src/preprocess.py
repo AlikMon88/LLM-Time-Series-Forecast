@@ -3,22 +3,6 @@ import torch
 
 def ts_encoding(series, model_type="llama", precision=3, alpha=0.99, beta=0.3):
     
-    """
-    Preprocess a batch of time series data for LLMs (GPT-style or LLaMA-style tokenization).
-    
-    Parameters:
-    - series (np.array): Raw time series data with shape (n_samples, seq_len).
-    - model_type (str): "gpt" for GPT-style tokenization, "llama" for LLaMA-style.
-    - precision (int): Number of decimal places to retain.
-    - alpha (float): Percentile scaling for normalization.
-    - beta (float): Offset for normalization.
-    
-    Returns:
-    - list of str: Tokenized time series strings.
-    - np.array: Offsets for each sample.
-    - np.array: Scale factors for each sample.
-    """
-
     series = np.array(series)
     n_samples = len(series)
     
@@ -32,36 +16,23 @@ def ts_encoding(series, model_type="llama", precision=3, alpha=0.99, beta=0.3):
     normalized_series = (series - offsets) / scale_factors
     formatted_values = np.round(normalized_series, precision).astype(str)
     
-    tokenized_series = []
+    encoded_series = []
     for i in range(n_samples):
         if model_type == "gpt":
-            tokenized_series.append(", ".join(" ".join(str(x)) for x in formatted_values[i]))
+            encoded_series.append(", ".join(" ".join(str(x)) for x in formatted_values[i]))
         elif model_type == "llama":
-            tokenized_series.append(", ".join(formatted_values[i]))
+            encoded_series.append(", ".join(formatted_values[i]))
         else:
             raise ValueError("model_type must be 'gpt' or 'llama'")
     
-    return tokenized_series, offsets.squeeze(), scale_factors.squeeze()
+    return encoded_series, offsets.squeeze(), scale_factors.squeeze()
 
-def ts_decoding(tokenized_series, model_type="llama", precision=3, offsets=None, scale_factors=None):
-    """
-    Convert tokenized LLM output back into numerical time series for either single samples or batches.
-    
-    Parameters:
-    - tokenized_series (str or list of str): Single tokenized time series string or list of tokenized strings.
-    - model_type (str): "gpt" for GPT-style, "llama" for LLaMA-style.
-    - precision (int): Number of decimal places to round.
-    - offsets (float or np.array): Offset(s) used during normalization.
-    - scale_factors (float or np.array): Scale factor(s) used during normalization.
-    
-    Returns:
-    - np.array: Reconstructed time series values.
-    """
-    
+def ts_decoding(encoded_series, model_type="llama", precision=3, offsets=None, scale_factors=None):
+
     # Handle single sample case
     single_sample = False
-    if isinstance(tokenized_series, str):
-        tokenized_series = [tokenized_series]
+    if isinstance(encoded_series, str):
+        encoded_series = [encoded_series]
         single_sample = True
         if offsets is not None and not isinstance(offsets, (int, float)):
             offsets = np.array([offsets])
@@ -70,12 +41,12 @@ def ts_decoding(tokenized_series, model_type="llama", precision=3, offsets=None,
     
     # Convert scalar values to arrays if needed
     if offsets is not None and isinstance(offsets, (int, float)):
-        offsets = np.full(len(tokenized_series), offsets)
+        offsets = np.full(len(encoded_series), offsets)
     if scale_factors is not None and isinstance(scale_factors, (int, float)):
-        scale_factors = np.full(len(tokenized_series), scale_factors)
+        scale_factors = np.full(len(encoded_series), scale_factors)
     
     decoded_series = []
-    for ts in tokenized_series:
+    for ts in encoded_series:
         if model_type == "gpt":
             values = ts.split(", ")
             values = ["".join(x.split()) for x in values]  # Remove spaces between digits
@@ -107,7 +78,9 @@ def process_sequences(texts, tokenizer, max_length=256, stride=128, is_inference
 
     all_input_ids = []
     for text in texts:
-
+        
+        text = str(text)
+        
         encoding = tokenizer(text, return_tensors="pt", add_special_tokens=False)
         seq_ids = encoding.input_ids[0]
         
