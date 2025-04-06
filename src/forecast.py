@@ -24,23 +24,28 @@ def create_forecast_prompt_sep(encoded_series, forecast_length=10, name='prey'):
     
     return prompt
 
-def create_forecast_prompt_joint(encoded_series_prey, encoded_series_predator, forecast_length=10, prey_name='prey', predator_name='predator'):
+def create_forecast_prompt_joint(encoded_series, forecast_length=10, prey_name='prey', predator_name='predator', is_show = False):
     
-    series_length = len(encoded_series_prey.split(', '))
+    series_len = len(encoded_series.split(';')) // 2
     
-    prompt = f"""<|im_start|>user
+    prompt = f"""
+    <|im_start|>user
     I have time series for {prey_name} and {predator_name} populations.
 
-    The data is formatted as: { '; '.join([f'{prey}, {pred}' for prey, pred in zip(encoded_series_prey.split(', '), encoded_series_predator.split(', '))]) };
+    The data is formatted as: {encoded_series};
 
-    Forecast the next {forecast_length} points in the same format:
-    {'; '.join([f'{{prey_{series_length + i}}}, {{pred_{series_length + i}}}' for i in range(1, forecast_length + 1)])}
+    Predict the next {forecast_length} points in the same format as below:
+    {'; '.join([f'{{prey_{series_len + i}}}, {{pred_{series_len + i}}}' for i in range(1, forecast_length + 1)])}
 
-    Generate exactly {forecast_length} pairs IN THE GIVEN FORMAT.
+    JUST PREDICT DON'T SAY ANYTHING
+    
     <|im_end|>
     <|im_start|>assistant
     """
     
+    if is_show:
+        print('PROMPT-ED:')
+        print(prompt)
     return prompt
 
 def create_forecast_prompt_joint_lora(encoded_series_prey, encoded_series_predator):
@@ -78,7 +83,7 @@ def extract_forecasts(forecast_output, model_type='llama'):
 
 
 # Generate forecasts
-def generate_forecast(model, prompt, tokenizer, max_new_tokens=100, is_tokenized = False):
+def generate_forecast(model, prompt, tokenizer, max_new_tokens=100, temperature=0.1, is_tokenized=False):
 
     if not is_tokenized:
         inputs = tokenizer(prompt, return_tensors="pt").to(model.device)

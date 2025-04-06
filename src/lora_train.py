@@ -257,4 +257,5 @@ if __name__ == '__main__':
     # Save plot
     fn_name = f'final_loss_curve_s_{target_steps}.png'
     plt.savefig(os.path.join(save_dir, fn_name))
+    print('saved-image-at: ', os.path.join(save_dir, fn_name))
     plt.close()

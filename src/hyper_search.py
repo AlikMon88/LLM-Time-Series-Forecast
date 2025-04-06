@@ -83,7 +83,7 @@ def run_hyperparameter_search():
         config['lora_rank'] = rank
         config['seq_length'] = ctx_len
         config['max_tokens'] = ctx_len ## Context-len needs to optimized for 2k steps
-        config['training_steps'] = 75  # Fixed training steps for comparison (NEED: 10k steps)
+        config['training_steps'] = 500  # Fixed training steps for comparison (NEED: 10k steps)
         
         # Save modified config
         run_config_path = os.path.join(hyper_save_dir, f'config_lr{lr}_rank{rank}_ctx{ctx_len}.yaml')

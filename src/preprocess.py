@@ -139,7 +139,7 @@ def preprocess_sequences_v2(time_series_data, tokenizer, forecast_length=5, max_
 
         for i in range(len(data_points) - forecast_length):  # Ensure we have enough data for forecasting
             # Use sliding window approach for training examples
-            history_length = min(5, i + 1)  # Use up to 5 previous points as context
+            history_length = min(10, i + 1)  # Use up to 10 previous points as context
 
             history = data_points[max(0, i + 1 - history_length) : i + 1]
             target = data_points[i + 1:i + 1 + forecast_length]  # Get the next `forecast_length` data points

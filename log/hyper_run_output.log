@@ -29,8 +29,8 @@ mlp_flops_per_layer: 13,417,644,032
 layer_norm_flops: 1,835,018
 transformer_layer_flops: 15,545,656,340
 final_layer_flops: 1,090,304,522
-forward_pass_flops: 234,275,608,374
-training_step_flops: 702,826,825,122
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
 
 
 LoRA Training FLOPS Summary:
@@ -40,20 +40,20 @@ mlp_flops_per_layer: 13,417,644,032
 layer_norm_flops: 1,835,018
 transformer_layer_flops: 15,545,656,340
 final_layer_flops: 1,090,304,522
-forward_pass_flops: 234,275,608,374
-training_step_flops: 236,367,354,877
-lora_parameters: 107,520
+forward_pass_flops: 374,186,515,434
+training_step_flops: 377,527,466,464
+lora_parameters: 172,032
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 2            Training_Steps: 2000           Total_Flops: 472,734,709,754,000
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 28,314,559,984,800
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 128]) torch.Size([100, 128])
-Time taken to load model:  0.02105085055033366 mins
+Time taken to load model:  0.015879857540130615 mins
 Total Parameters: 494,319,872
 Trainable Parameters: 287,104
 Qwen2Config {
@@ -73,7 +73,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -87,12 +87,12 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
-Checkpoint saved at step 500
-Checkpoint saved at step 1000
-Checkpoint saved at step 1500
-Checkpoint saved at step 2000
-Time taken: 9.885087517897288 mins
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.148059940338135 mins
 
 --- Running Hyperparameter Combination ---
 Learning Rate: 1e-05, LoRA Rank: 2, Context Length: 512
@@ -105,8 +105,8 @@ mlp_flops_per_layer: 53,670,576,128
 layer_norm_flops: 7,340,042
 transformer_layer_flops: 65,133,318,164
 final_layer_flops: 1,095,809,546
-forward_pass_flops: 978,097,417,014
-training_step_flops: 2,934,292,251,042
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
 
 
 LoRA Training FLOPS Summary:
@@ -116,20 +116,20 @@ mlp_flops_per_layer: 53,670,576,128
 layer_norm_flops: 7,340,042
 transformer_layer_flops: 65,133,318,164
 final_layer_flops: 1,095,809,546
-forward_pass_flops: 978,097,417,014
-training_step_flops: 986,830,429,665
-lora_parameters: 107,520
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,578,264,220,494
+lora_parameters: 172,032
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 2            Training_Steps: 2000           Total_Flops: 1,973,660,859,330,000
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 118,369,816,537,050
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 512]) torch.Size([100, 512])
-Time taken to load model:  0.015494589010874431 mins
+Time taken to load model:  0.015504757563273111 mins
 Total Parameters: 494,319,872
 Trainable Parameters: 287,104
 Qwen2Config {
@@ -149,7 +149,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -163,12 +163,12 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
-Checkpoint saved at step 500
-Checkpoint saved at step 1000
-Checkpoint saved at step 1500
-Checkpoint saved at step 2000
-Time taken: 29.175707614421846 mins
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.059399469693502 mins
 
 --- Running Hyperparameter Combination ---
 Learning Rate: 1e-05, LoRA Rank: 2, Context Length: 768
@@ -181,8 +181,8 @@ mlp_flops_per_layer: 80,505,864,192
 layer_norm_flops: 11,010,058
 transformer_layer_flops: 100,650,670,100
 final_layer_flops: 1,099,479,562
-forward_pass_flops: 1,510,862,283,574
-training_step_flops: 4,532,586,850,722
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
 
 
 LoRA Training FLOPS Summary:
@@ -192,20 +192,20 @@ mlp_flops_per_layer: 80,505,864,192
 layer_norm_flops: 11,010,058
 transformer_layer_flops: 100,650,670,100
 final_layer_flops: 1,099,479,562
-forward_pass_flops: 1,510,862,283,574
-training_step_flops: 1,524,352,125,391
-lora_parameters: 107,520
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,438,296,156,567
+lora_parameters: 172,032
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 2            Training_Steps: 2000           Total_Flops: 3,048,704,250,782,000
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 182,872,211,742,525
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 768]) torch.Size([100, 768])
-Time taken to load model:  0.015411376953125 mins
+Time taken to load model:  0.014841226736704509 mins
 Total Parameters: 494,319,872
 Trainable Parameters: 287,104
 Qwen2Config {
@@ -225,7 +225,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -239,12 +239,12 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
-Checkpoint saved at step 500
-Checkpoint saved at step 1000
-Checkpoint saved at step 1500
-Checkpoint saved at step 2000
-Time taken: 41.17665592829386 mins
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.6817144751548767 mins
 
 --- Running Hyperparameter Combination ---
 Learning Rate: 1e-05, LoRA Rank: 4, Context Length: 128
@@ -257,8 +257,8 @@ mlp_flops_per_layer: 13,417,644,032
 layer_norm_flops: 1,835,018
 transformer_layer_flops: 15,545,656,340
 final_layer_flops: 1,090,304,522
-forward_pass_flops: 234,275,608,374
-training_step_flops: 702,826,825,122
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
 
 
 LoRA Training FLOPS Summary:
@@ -268,20 +268,20 @@ mlp_flops_per_layer: 13,417,644,032
 layer_norm_flops: 1,835,018
 transformer_layer_flops: 15,545,656,340
 final_layer_flops: 1,090,304,522
-forward_pass_flops: 234,275,608,374
-training_step_flops: 238,459,101,380
-lora_parameters: 215,040
+forward_pass_flops: 374,186,515,434
+training_step_flops: 380,868,417,495
+lora_parameters: 344,064
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 4            Training_Steps: 2000           Total_Flops: 476,918,202,760,000
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 28,565,131,312,125
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 128]) torch.Size([100, 128])
-Time taken to load model:  0.014289561907450359 mins
+Time taken to load model:  0.014489567279815674 mins
 Total Parameters: 494,455,040
 Trainable Parameters: 422,272
 Qwen2Config {
@@ -301,7 +301,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -315,12 +315,12 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
-Checkpoint saved at step 500
-Checkpoint saved at step 1000
-Checkpoint saved at step 1500
-Checkpoint saved at step 2000
-Time taken: 9.793214122454325 mins
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.067499287923177 mins
 
 --- Running Hyperparameter Combination ---
 Learning Rate: 1e-05, LoRA Rank: 4, Context Length: 512
@@ -333,8 +333,8 @@ mlp_flops_per_layer: 53,670,576,128
 layer_norm_flops: 7,340,042
 transformer_layer_flops: 65,133,318,164
 final_layer_flops: 1,095,809,546
-forward_pass_flops: 978,097,417,014
-training_step_flops: 2,934,292,251,042
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
 
 
 LoRA Training FLOPS Summary:
@@ -344,20 +344,20 @@ mlp_flops_per_layer: 53,670,576,128
 layer_norm_flops: 7,340,042
 transformer_layer_flops: 65,133,318,164
 final_layer_flops: 1,095,809,546
-forward_pass_flops: 978,097,417,014
-training_step_flops: 995,563,442,317
-lora_parameters: 215,040
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,592,231,160,498
+lora_parameters: 344,064
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 4            Training_Steps: 2000           Total_Flops: 1,991,126,884,634,000
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 119,417,337,037,350
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 512]) torch.Size([100, 512])
-Time taken to load model:  0.017503503958384195 mins
+Time taken to load model:  0.014177735646565754 mins
 Total Parameters: 494,455,040
 Trainable Parameters: 422,272
 Qwen2Config {
@@ -377,7 +377,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -391,12 +391,12 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
-Checkpoint saved at step 500
-Checkpoint saved at step 1000
-Checkpoint saved at step 1500
-Checkpoint saved at step 2000
-Time taken: 29.18410280942917 mins
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.05991370677948 mins
 
 --- Running Hyperparameter Combination ---
 Learning Rate: 1e-05, LoRA Rank: 4, Context Length: 768
@@ -409,8 +409,8 @@ mlp_flops_per_layer: 80,505,864,192
 layer_norm_flops: 11,010,058
 transformer_layer_flops: 100,650,670,100
 final_layer_flops: 1,099,479,562
-forward_pass_flops: 1,510,862,283,574
-training_step_flops: 4,532,586,850,722
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
 
 
 LoRA Training FLOPS Summary:
@@ -420,20 +420,20 @@ mlp_flops_per_layer: 80,505,864,192
 layer_norm_flops: 11,010,058
 transformer_layer_flops: 100,650,670,100
 final_layer_flops: 1,099,479,562
-forward_pass_flops: 1,510,862,283,574
-training_step_flops: 1,537,841,967,209
-lora_parameters: 215,040
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,459,873,998,661
+lora_parameters: 344,064
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 4            Training_Steps: 2000           Total_Flops: 3,075,683,934,418,000
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 184,490,549,899,575
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 768]) torch.Size([100, 768])
-Time taken to load model:  0.01464920441309611 mins
+Time taken to load model:  0.014294091860453289 mins
 Total Parameters: 494,455,040
 Trainable Parameters: 422,272
 Qwen2Config {
@@ -453,7 +453,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -467,12 +467,12 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
-Checkpoint saved at step 500
-Checkpoint saved at step 1000
-Checkpoint saved at step 1500
-Checkpoint saved at step 2000
-Time taken: 41.1770744283994 mins
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.675603926181793 mins
 
 --- Running Hyperparameter Combination ---
 Learning Rate: 1e-05, LoRA Rank: 8, Context Length: 128
@@ -485,8 +485,8 @@ mlp_flops_per_layer: 13,417,644,032
 layer_norm_flops: 1,835,018
 transformer_layer_flops: 15,545,656,340
 final_layer_flops: 1,090,304,522
-forward_pass_flops: 234,275,608,374
-training_step_flops: 702,826,825,122
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
 
 
 LoRA Training FLOPS Summary:
@@ -496,20 +496,20 @@ mlp_flops_per_layer: 13,417,644,032
 layer_norm_flops: 1,835,018
 transformer_layer_flops: 15,545,656,340
 final_layer_flops: 1,090,304,522
-forward_pass_flops: 234,275,608,374
-training_step_flops: 242,642,594,387
-lora_parameters: 430,080
+forward_pass_flops: 374,186,515,434
+training_step_flops: 387,550,319,556
+lora_parameters: 688,128
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 8            Training_Steps: 2000           Total_Flops: 485,285,188,774,000
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 29,066,273,966,700
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 128]) torch.Size([100, 128])
-Time taken to load model:  0.01467882792154948 mins
+Time taken to load model:  0.014407145977020263 mins
 Total Parameters: 494,725,376
 Trainable Parameters: 692,608
 Qwen2Config {
@@ -529,7 +529,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -543,12 +543,12 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
-Checkpoint saved at step 500
-Checkpoint saved at step 1000
-Checkpoint saved at step 1500
-Checkpoint saved at step 2000
-Time taken: 9.725355021158855 mins
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.072773877779643 mins
 
 --- Running Hyperparameter Combination ---
 Learning Rate: 1e-05, LoRA Rank: 8, Context Length: 512
@@ -561,8 +561,8 @@ mlp_flops_per_layer: 53,670,576,128
 layer_norm_flops: 7,340,042
 transformer_layer_flops: 65,133,318,164
 final_layer_flops: 1,095,809,546
-forward_pass_flops: 978,097,417,014
-training_step_flops: 2,934,292,251,042
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
 
 
 LoRA Training FLOPS Summary:
@@ -572,20 +572,20 @@ mlp_flops_per_layer: 53,670,576,128
 layer_norm_flops: 7,340,042
 transformer_layer_flops: 65,133,318,164
 final_layer_flops: 1,095,809,546
-forward_pass_flops: 978,097,417,014
-training_step_flops: 1,013,029,467,621
-lora_parameters: 430,080
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,620,165,040,507
+lora_parameters: 688,128
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 8            Training_Steps: 2000           Total_Flops: 2,026,058,935,242,000
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 121,512,378,038,025
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 512]) torch.Size([100, 512])
-Time taken to load model:  0.01442035436630249 mins
+Time taken to load model:  0.01733849843343099 mins
 Total Parameters: 494,725,376
 Trainable Parameters: 692,608
 Qwen2Config {
@@ -605,7 +605,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -619,12 +619,12 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
-Checkpoint saved at step 500
-Checkpoint saved at step 1000
-Checkpoint saved at step 1500
-Checkpoint saved at step 2000
-Time taken: 29.19143574635188 mins
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.191840708255768 mins
 
 --- Running Hyperparameter Combination ---
 Learning Rate: 1e-05, LoRA Rank: 8, Context Length: 768
@@ -637,8 +637,8 @@ mlp_flops_per_layer: 80,505,864,192
 layer_norm_flops: 11,010,058
 transformer_layer_flops: 100,650,670,100
 final_layer_flops: 1,099,479,562
-forward_pass_flops: 1,510,862,283,574
-training_step_flops: 4,532,586,850,722
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
 
 
 LoRA Training FLOPS Summary:
@@ -648,20 +648,20 @@ mlp_flops_per_layer: 80,505,864,192
 layer_norm_flops: 11,010,058
 transformer_layer_flops: 100,650,670,100
 final_layer_flops: 1,099,479,562
-forward_pass_flops: 1,510,862,283,574
-training_step_flops: 1,564,821,650,844
-lora_parameters: 430,080
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,503,029,682,848
+lora_parameters: 688,128
 
 
 FLOPS Counted:
-Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 8            Training_Steps: 2000           Total_Flops: 3,129,643,301,688,000
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 187,727,226,213,600
 
 Keys in HDF5 file: ['time', 'trajectories']
 LOG: (data-load-shape)
 (1000, 80) (1000, 21) (1000, 80) (1000, 21)
 LOG: (prepare-load-shape)
 torch.Size([900, 768]) torch.Size([100, 768])
-Time taken to load model:  0.014400561650594076 mins
+Time taken to load model:  0.017193504174550376 mins
 Total Parameters: 494,725,376
 Trainable Parameters: 692,608
 Qwen2Config {
@@ -681,7 +681,7 @@ Qwen2Config {
   "max_window_layers": 21,
   "model_type": "qwen2",
   "num_attention_heads": 14,
-  "num_hidden_layers": 15,
+  "num_hidden_layers": 24,
   "num_key_value_heads": 2,
   "rms_norm_eps": 1e-06,
   "rope_scaling": null,
@@ -695,4 +695,1383 @@ Qwen2Config {
   "vocab_size": 151936
 }
 
-Target-Train-Steps: 2000
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.7212349732716876 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 2, Context Length: 128
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 377,527,466,464
+lora_parameters: 172,032
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 28,314,559,984,800
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 128]) torch.Size([100, 128])
+Time taken to load model:  0.017803343137105306 mins
+Total Parameters: 494,319,872
+Trainable Parameters: 287,104
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 128,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.0907251199086505 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 2, Context Length: 512
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,578,264,220,494
+lora_parameters: 172,032
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 118,369,816,537,050
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 512]) torch.Size([100, 512])
+Time taken to load model:  0.016746314366658528 mins
+Total Parameters: 494,319,872
+Trainable Parameters: 287,104
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 512,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.055108388264974 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 2, Context Length: 768
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,438,296,156,567
+lora_parameters: 172,032
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 182,872,211,742,525
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 768]) torch.Size([100, 768])
+Time taken to load model:  0.014640871683756511 mins
+Total Parameters: 494,319,872
+Trainable Parameters: 287,104
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 768,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.67427392800649 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 4, Context Length: 128
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 380,868,417,495
+lora_parameters: 344,064
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 28,565,131,312,125
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 128]) torch.Size([100, 128])
+Time taken to load model:  0.015993706385294595 mins
+Total Parameters: 494,455,040
+Trainable Parameters: 422,272
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 128,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.061029656728109 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 4, Context Length: 512
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,592,231,160,498
+lora_parameters: 344,064
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 119,417,337,037,350
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 512]) torch.Size([100, 512])
+Time taken to load model:  0.014576450983683268 mins
+Total Parameters: 494,455,040
+Trainable Parameters: 422,272
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 512,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.0607072472572328 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 4, Context Length: 768
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,459,873,998,661
+lora_parameters: 344,064
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 184,490,549,899,575
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 768]) torch.Size([100, 768])
+Time taken to load model:  0.01425556739171346 mins
+Total Parameters: 494,455,040
+Trainable Parameters: 422,272
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 768,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.6719775398572287 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 8, Context Length: 128
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 387,550,319,556
+lora_parameters: 688,128
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 29,066,273,966,700
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 128]) torch.Size([100, 128])
+Time taken to load model:  0.014245561758677165 mins
+Total Parameters: 494,725,376
+Trainable Parameters: 692,608
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 128,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.0547583222389223 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 8, Context Length: 512
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,620,165,040,507
+lora_parameters: 688,128
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 121,512,378,038,025
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 512]) torch.Size([100, 512])
+Time taken to load model:  0.014725172519683838 mins
+Total Parameters: 494,725,376
+Trainable Parameters: 692,608
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 512,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.0588512818018594 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 5e-05, LoRA Rank: 8, Context Length: 768
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,503,029,682,848
+lora_parameters: 688,128
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 187,727,226,213,600
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 768]) torch.Size([100, 768])
+Time taken to load model:  0.014667987823486328 mins
+Total Parameters: 494,725,376
+Trainable Parameters: 692,608
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 768,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.676751108964284 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 2, Context Length: 128
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 377,527,466,464
+lora_parameters: 172,032
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 28,314,559,984,800
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 128]) torch.Size([100, 128])
+Time taken to load model:  0.01444072723388672 mins
+Total Parameters: 494,319,872
+Trainable Parameters: 287,104
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 128,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.0590103189150493 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 2, Context Length: 512
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,578,264,220,494
+lora_parameters: 172,032
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 118,369,816,537,050
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 512]) torch.Size([100, 512])
+Time taken to load model:  0.019387070337931314 mins
+Total Parameters: 494,319,872
+Trainable Parameters: 287,104
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 512,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.075878556569417 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 2, Context Length: 768
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,438,296,156,567
+lora_parameters: 172,032
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 2            Training_Steps: 75             Total_Flops: 182,872,211,742,525
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 768]) torch.Size([100, 768])
+Time taken to load model:  0.01434166431427002 mins
+Total Parameters: 494,319,872
+Trainable Parameters: 287,104
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 768,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.657085585594177 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 4, Context Length: 128
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 380,868,417,495
+lora_parameters: 344,064
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 28,565,131,312,125
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 128]) torch.Size([100, 128])
+Time taken to load model:  0.014001766840616861 mins
+Total Parameters: 494,455,040
+Trainable Parameters: 422,272
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 128,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.057249049345652 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 4, Context Length: 512
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,592,231,160,498
+lora_parameters: 344,064
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 119,417,337,037,350
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 512]) torch.Size([100, 512])
+Time taken to load model:  0.014229718844095867 mins
+Total Parameters: 494,455,040
+Trainable Parameters: 422,272
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 512,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.0519126772880556 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 4, Context Length: 768
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,459,873,998,661
+lora_parameters: 344,064
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 4            Training_Steps: 75             Total_Flops: 184,490,549,899,575
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 768]) torch.Size([100, 768])
+Time taken to load model:  0.014267770449320476 mins
+Total Parameters: 494,455,040
+Trainable Parameters: 422,272
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 768,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.6752517382303873 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 8, Context Length: 128
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 1,122,559,546,302
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 458,752
+attention_flops_per_layer: 2,123,424,768
+mlp_flops_per_layer: 13,417,644,032
+layer_norm_flops: 1,835,018
+transformer_layer_flops: 15,545,656,340
+final_layer_flops: 1,090,304,522
+forward_pass_flops: 374,186,515,434
+training_step_flops: 387,550,319,556
+lora_parameters: 688,128
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 128            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 29,066,273,966,700
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 128]) torch.Size([100, 128])
+Time taken to load model:  0.014361123243967691 mins
+Total Parameters: 494,725,376
+Trainable Parameters: 692,608
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 128,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 2.0595561385154726 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 8, Context Length: 512
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 4,692,891,841,470
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 1,835,008
+attention_flops_per_layer: 11,444,391,936
+mlp_flops_per_layer: 53,670,576,128
+layer_norm_flops: 7,340,042
+transformer_layer_flops: 65,133,318,164
+final_layer_flops: 1,095,809,546
+forward_pass_flops: 1,564,297,280,490
+training_step_flops: 1,620,165,040,507
+lora_parameters: 688,128
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 512            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 121,512,378,038,025
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 512]) torch.Size([100, 512])
+Time taken to load model:  0.014014200369517008 mins
+Total Parameters: 494,725,376
+Trainable Parameters: 692,608
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 512,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.0585439562797547 mins
+
+--- Running Hyperparameter Combination ---
+Learning Rate: 0.0004, LoRA Rank: 8, Context Length: 768
+
+
+Regular Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 7,250,154,943,422
+
+
+LoRA Training FLOPS Summary:
+embedding_flops: 2,752,512
+attention_flops_per_layer: 20,117,280,768
+mlp_flops_per_layer: 80,505,864,192
+layer_norm_flops: 11,010,058
+transformer_layer_flops: 100,650,670,100
+final_layer_flops: 1,099,479,562
+forward_pass_flops: 2,416,718,314,474
+training_step_flops: 2,503,029,682,848
+lora_parameters: 688,128
+
+
+FLOPS Counted:
+Model-Size: 0.5b         Seq_len: 768            Batch_size: 4            Lora_rank: 8            Training_Steps: 75             Total_Flops: 187,727,226,213,600
+
+Keys in HDF5 file: ['time', 'trajectories']
+LOG: (data-load-shape)
+(1000, 80) (1000, 21) (1000, 80) (1000, 21)
+LOG: (prepare-load-shape)
+torch.Size([900, 768]) torch.Size([100, 768])
+Time taken to load model:  0.014288604259490967 mins
+Total Parameters: 494,725,376
+Trainable Parameters: 692,608
+Qwen2Config {
+  "_attn_implementation_autoset": true,
+  "_name_or_path": "Qwen/Qwen2.5-0.5B-Instruct",
+  "architectures": [
+    "Qwen2ForCausalLM"
+  ],
+  "attention_dropout": 0.0,
+  "bos_token_id": 151643,
+  "eos_token_id": 151645,
+  "hidden_act": "silu",
+  "hidden_size": 896,
+  "initializer_range": 0.02,
+  "intermediate_size": 4864,
+  "max_position_embeddings": 768,
+  "max_window_layers": 21,
+  "model_type": "qwen2",
+  "num_attention_heads": 14,
+  "num_hidden_layers": 24,
+  "num_key_value_heads": 2,
+  "rms_norm_eps": 1e-06,
+  "rope_scaling": null,
+  "rope_theta": 1000000.0,
+  "sliding_window": 32768,
+  "tie_word_embeddings": true,
+  "torch_dtype": "float32",
+  "transformers_version": "4.49.0",
+  "use_cache": true,
+  "use_sliding_window": false,
+  "vocab_size": 151936
+}
+
+Target-Train-Steps: 75
+Checkpoint saved at step 18
+Checkpoint saved at step 36
+Checkpoint saved at step 54
+Checkpoint saved at step 72
+Time taken: 3.6694150527318317 mins
+
+--- Best Hyperparameter Configuration ---
+Learning Rate: 0.0004
+LoRA Rank: 8
+Context Length: 768
+Validation Loss: 0.4408435523509979
