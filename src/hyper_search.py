@@ -65,8 +65,8 @@ def hyper_flops_counter(r_config):
 def run_hyperparameter_search_lr_rank():
     
     # Hyperparameter grid
-    learning_rates = [1e-5, 5e-5, 4e-4]
-    lora_ranks = [2, 4, 8]
+    learning_rates = [1e-5]#, 5e-5, 4e-4]
+    lora_ranks = [2]#, 4, 8]
     
     # Track results
     results = []
@@ -87,7 +87,7 @@ def run_hyperparameter_search_lr_rank():
         config['lora_rank'] = rank
         config['seq_length'] = 512
         config['max_tokens'] = 512 ## Context-len needs to optimized for 2k steps
-        config['training_steps'] = 500  # Fixed training steps for comparison (NEED: 10k steps)
+        config['training_steps'] = 1  # Fixed training steps for comparison (NEED: 10k steps)
         
         # Save modified config
         run_config_path = os.path.join(hyper_save_dir, f'config_lr{lr}_rank{rank}_512.yaml')
@@ -163,13 +163,24 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
     rank = best_config['lora_rank']
     
     data_prey, data_pred = data
+    data_prey_true, data_pred_true = data_true
     
     # Hyperparameter search
     for ctx_len in context_lengths:
         print(f"\n--- Running Hyperparameter Combination ---")
         print(f"Learning Rate: {lr}, LoRA Rank: {rank}, Context Length: {ctx_len}")
         
-        _, _, prey_os, pred_os, data_test = prepare_data(data_prey, data_pred, tokenizer, ctx_len, train_split=config['train_split'], prep_overlap=False, forecast_length=21, is_forecast=True)
+        _, _, prey_os, pred_os, data_test = prepare_data(data_prey, data_pred, tokenizer, ctx_len, train_split=best_config['train_split'], forecast_length=21, is_forecast=True)
+        data_prey_true, data_pred_true = data_prey_true[-len(data_test):], data_pred_true[-len(data_test):]
+        
+        idx = 1
+        data_test, data_prey_true, data_pred_true = data_test[:idx], data_prey_true[:idx], data_pred_true[:idx]
+        
+        print('---' * 20)
+        print('Sliced-Val')
+        print(data_test.shape, data_prey_true.shape, data_pred_true.shape)
+        print('---' * 20)
+        
         offset_scale = [prey_os, pred_os]
         
         # Modify config for each run
@@ -181,7 +192,7 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
         config['lora_rank'] = rank
         config['seq_length'] = ctx_len
         config['max_tokens'] = ctx_len ## Context-len needs to optimized for 2k steps
-        config['training_steps'] = 100  # Fixed training steps for comparison (NEED: 10k steps)
+        config['training_steps'] = 1  # Fixed training steps for comparison (NEED: 10k steps)
         
         # Save modified config
         run_config_path = os.path.join(hyper_save_dir, f'config_lr{lr}_rank{rank}_ctx{ctx_len}.yaml')
@@ -215,6 +226,11 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
                 'config_path': run_config_path
             })
             
+            print(results)
+            print()
+            print(eval_metrics)
+            print()
+                        
             # Plot and save loss curves
             plt.figure(figsize=(10, 5))
             plt.plot(train_curve, label='Train Loss', color='red')
@@ -229,8 +245,10 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
             plt.close()
             
             # Save results
-            with open(os.path.join(hyper_save_dir, 'eval_dir'), 'w') as f:
+            with open(os.path.join(hyper_save_dir, f'eval_dir\hyper_eval_metrics_{ctx_len}.json'), 'w') as f:
                 json.dump(eval_metrics, f, indent=4)
+                
+            print(f'Saved eval_metrics @ hyper_eval_metrics_{ctx_len}.json')
     
         except Exception as e:
             print(f"Error in hyperparameter run: {e}")
@@ -255,7 +273,7 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
 if __name__ == '__main__':
     
     _, tokenizer = load_qwen()
-    
     data_prey, data_prey_true, data_pred, data_pred_true, time_data_past, time_data_true = load_data(file_path, time_step_split=0.8, is_plot = True)
     best_config = run_hyperparameter_search_lr_rank()
+    best_config['train_split'] = 0.8
     run_hyperparameter_search_ctx(best_config, [data_prey, data_pred], [data_prey_true, data_pred_true], [time_data_past, time_data_true])
