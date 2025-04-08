@@ -67,7 +67,7 @@ python -m ipykernel install --user --name=m2-env --display-name "Python (m2-env)
 ## Launch Jupyter Notebook
 jupyter notebook
 ```
-In the browser, navigate to ```main.ipynb```  to run it.
+In the browser, navigate to ```main_*.ipynb```  to run it.
 
 To deactivate the python env just run ```deactivate``` in the terminal
 
