@@ -173,8 +173,8 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
         _, _, prey_os, pred_os, data_test = prepare_data(data_prey, data_pred, tokenizer, ctx_len, train_split=best_config['train_split'], forecast_length=21, is_forecast=True)
         data_prey_true, data_pred_true = data_prey_true[-len(data_test):], data_pred_true[-len(data_test):]
         
-        idx = 1
-        data_test, data_prey_true, data_pred_true = data_test[:idx], data_prey_true[:idx], data_pred_true[:idx]
+        val_limit = 1
+        data_test, data_prey_true, data_pred_true = data_test[:val_limit], data_prey_true[:val_limit], data_pred_true[:val_limit]
         
         print('---' * 20)
         print('Sliced-Val')
@@ -211,7 +211,7 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
             # Train model
             model_lora, train_curve, val_curve, steps = lora_trainer.train()
             
-            # run eval.py
+            # run eval.py \\\ The MODEL_LORA is not good enough for prediction 
             eval_metrics = evaluate_lora_model(model_lora, data_test, data_true, time_data, offset_scale, tokenizer=tokenizer, is_instruction=False)
             
             # Calculate final validation loss
@@ -249,7 +249,7 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
                 json.dump(eval_metrics, f, indent=4)
                 
             print(f'Saved eval_metrics @ hyper_eval_metrics_{ctx_len}.json')
-    
+        
         except Exception as e:
             print(f"Error in hyperparameter run: {e}")
     

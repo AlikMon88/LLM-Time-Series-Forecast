@@ -21,6 +21,8 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
         prey_pred_encoded.append(create_forecast_prompt_joint_lora(token_prey, token_pred))
 
     prey_pred_encoded = np.array(prey_pred_encoded)
+    prey_pred_encoded = prey_pred_encoded[np.random.permutation(len(prey_pred_encoded))]
+    
     data_train, data_test = prey_pred_encoded[:int(train_split * len(prey_pred_encoded))], prey_pred_encoded[int(train_split * len(prey_pred_encoded)):]  
     
     if len(data_train) < len(data_test):
@@ -30,23 +32,13 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
     if not prep_overlap:
         ''' process_sequences_v2 - has a localized context-window of 5 time-steps + fixed instruction tokenization '''
         train_input_ids, train_target_ids = preprocess_sequences_v2(data_train, tokenizer, forecast_length, max_ctx_length) ## Its past-future chunking almost 80 times within 100 nested iteration
-        rn_idx = np.random.randint(0, len(train_input_ids), size = len(data_train))
-        train_input_ids, train_target_ids = train_input_ids[rn_idx], train_target_ids[rn_idx] ## we overfit on a 1% subset 
-
         val_input_ids, val_target_ids = preprocess_sequences_v2(data_test, tokenizer, forecast_length, max_ctx_length)
-        rn_idx = np.random.randint(0, len(val_input_ids), size = len(data_test))
-        val_input_ids, val_target_ids = val_input_ids[rn_idx], val_target_ids[rn_idx]
-
+    
     else:
         ''' process_sequences_v1 - Global and larger context window - better for hyoerparameter optimization '''
         train_input_ids = process_sequences(data_train, tokenizer, max_length=max_ctx_length, stride=max_ctx_length // 2)
-        rn_idx = np.random.randint(0, len(train_input_ids), size = len(data_train))
-        train_input_ids = train_input_ids[rn_idx]
-
         val_input_ids = process_sequences(data_train, tokenizer, max_length=max_ctx_length, stride=max_ctx_length)
-        rn_idx = np.random.randint(0, len(val_input_ids), size = len(data_test))
-        val_input_ids = val_input_ids[rn_idx]
-
+    
     if is_forecast:
         return train_input_ids, val_input_ids, prey_os, pred_os, data_test
     else:

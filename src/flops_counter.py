@@ -29,12 +29,6 @@ class ModelConfig: ### Just get the configeration of Qwen 2.5 from load_qwen()
 
 
 class FLOPSCounter:
-    """
-    Counter for floating point operations (FLOPS) in the Qwen2.5-Instruct model.
-    
-    This class provides methods to calculate FLOPS for different components of the model
-    and for the entire forward and backward passes.
-    """
     
     def __init__(self, config: ModelConfig):
         self.config = config
@@ -110,7 +104,6 @@ class FLOPSCounter:
         
         # Attention x Value: (batch_size * num_heads, seq_length, seq_length) x 
         # (batch_size * num_heads, seq_length, dim_per_head)
-        # For GQA, each query head attends to one of the kv_heads
         attn_value_flops = batch_size * num_heads * self.matrix_multiply_flops(seq_length, seq_length, dim_per_head)
         
         # Combine heads: (batch_size * seq_length, num_heads * dim_per_head) x (num_heads * dim_per_head, hidden_size)
@@ -220,22 +213,13 @@ class FLOPSCounter:
         # Forward pass is the same as regular forward pass
         forward_flops = self.forward_pass_flops()
         
-        # But backward only applies to LoRA parameters
         # For each LoRA module, we have two small matrices: A (d_in × r) and B (r × d_out)
-        # Assuming d_in and d_out are both hidden_size for simplicity
         hidden_size = self.config.hidden_size
         
-        # FLOPS for each LoRA module's backward pass
         # - A matrix: hidden_size × lora_rank parameters
         # - B matrix: lora_rank × hidden_size parameters
         lora_params_per_module = 2 * hidden_size * lora_rank
         
-        # We assume backward FLOPS are proportional to the number of parameters
-        # Regular model backward FLOPS are 2 * forward_flops
-        # So we scale by the ratio of LoRA parameters to total parameters
-        
-        # Approximate total parameters in query and value projections
-        # We count only the query and value matrices that LoRA is applied to
         seq_length = self.config.seq_length
         batch_size = self.config.batch_size
         layers = self.config.num_hidden_layers

@@ -5,12 +5,6 @@ from forecast import *
 from preprocess import *
 from data_create import *
     
-## When Running from IPY-Notebook (CHANGE THIS)
-# if not __name__ == '__main__':
-#     from .forecast import *
-#     from .preprocess import *
-#     from .data_create import *
-
 def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, forecast_length = 5, is_forecast = False):
 
     encoded_prey, offset_prey, scale_prey = ts_encoding(data_prey, model_type="llama", precision=3, alpha=0.99, beta=0.3)
@@ -27,6 +21,7 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
         prey_pred_encoded.append(create_forecast_prompt_joint_lora(token_prey, token_pred))
 
     prey_pred_encoded = np.array(prey_pred_encoded)
+    prey_pred_encoded = prey_pred_encoded[np.random.permutation(len(prey_pred_encoded))]
     
     data_train, data_test = prey_pred_encoded[:int(train_split * len(prey_pred_encoded))], prey_pred_encoded[int(train_split * len(prey_pred_encoded)):]  
     if len(data_train) < len(data_test):
@@ -34,12 +29,7 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
 
     ''' process_sequences_v1 - Global and larger context window - better for hyoerparameter optimization '''
     train_input_ids = process_sequences(data_train, tokenizer, max_length=max_ctx_length, stride=max_ctx_length // 2)
-    rn_idx = np.random.randint(0, len(train_input_ids), size = len(data_train))
-    train_input_ids = train_input_ids[rn_idx]
-
-    val_input_ids = process_sequences(data_train, tokenizer, max_length=max_ctx_length, stride=max_ctx_length)
-    rn_idx = np.random.randint(0, len(val_input_ids), size = len(data_test))
-    val_input_ids = val_input_ids[rn_idx]
+    val_input_ids = process_sequences(data_test, tokenizer, max_length=max_ctx_length, stride=max_ctx_length)
     
     if is_forecast:
         return train_input_ids, val_input_ids, prey_os, pred_os, data_test

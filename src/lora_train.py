@@ -69,7 +69,7 @@ class LoRATrainer():
 
         print('Time taken to load model: ', (lt - ft) / 60, 'mins') 
 
-        model_lora.config.max_position_embeddings = self.seq_length
+        model_lora.config.max_position_embeddings = self.max_tokens
         model_lora.config.num_hidden_layers = self.hidden_layers
 
         for layer in model_lora.model.layers:

@@ -7,6 +7,9 @@ import random
 from pprint import pprint
 import json
 import os
+import argparse
+import warnings
+warnings.filterwarnings('ignore')
 
 from forecast import *
 from preprocess import *
@@ -73,7 +76,8 @@ def visualize_forecast_comparison(true_data, predicted_data, time_data):
     plt.plot(time_data_true[:len(predicted_data[-1])], predicted_data[-1], label = 'Prediction (Predator)', marker = 'x')
     plt.plot(time_data_true[:len(predicted_data[-1])], true_data[-1].tolist()[:len(predicted_data[-1])], label = 'Truth (Predator)', marker = '.')
 
-    plt.xlabel('time')
+    plt.xlabel('Time')
+    plt.ylabel('Population')
     plt.title('Prey-Predator-Population (Forecast) (Pred-Cut)')
     plt.legend()
     plt.grid()
@@ -117,7 +121,7 @@ def evaluate_lora_model(model_lora, data_test, data_true, time_data, offset_scal
     return metrics
 
 
-def main(model, tokenizer, model_type = 'baseline'):
+def main(model, tokenizer, model_type = 'baseline', val_limit=5):
     
     data_prey, data_prey_true, data_pred, data_pred_true, time_data_past, time_data_true = load_data(file_path, time_step_split=0.8, is_plot = True)
     print(data_prey.shape, data_prey_true.shape, data_pred.shape, data_pred_true.shape, time_data_past.shape, time_data_true.shape)
@@ -129,8 +133,7 @@ def main(model, tokenizer, model_type = 'baseline'):
     data_prey_true, data_pred_true = data_prey_true[-len(data_test):], data_pred_true[-len(data_test):]
     print(data_prey_true.shape, data_pred_true.shape)
     
-    idx = 150
-    data_test, data_prey_true, data_pred_true = data_test[:idx], data_prey_true[:idx], data_pred_true[:idx]    
+    data_test, data_prey_true, data_pred_true = data_test[:val_limit], data_prey_true[:val_limit], data_pred_true[:val_limit]    
     print(data_test.shape, data_prey_true.shape, data_pred_true.shape)
     
     data_true = [data_prey_true, data_pred_true]
@@ -145,15 +148,40 @@ def main(model, tokenizer, model_type = 'baseline'):
     
     
 if __name__ == '__main__':
-    print('Running __eval.py__...')
     
     import transformers
     from transformers import AutoModelForCausalLM
 
-    model, tokenizer = load_qwen()
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
     
-    ### Load the trained LoRA model
-    # model_type = 'lora'
-    # model = AutoModelForCausalLM.from_pretrained(lora_model_path, trust_remote_code=True) 
+    parser = argparse.ArgumentParser(description="Evaluate a model using baseline or LoRA.")
+    parser.add_argument('--model_type', choices=['baseline', 'lora'], required=True,
+                        help="Choose 'baseline' for the base model or 'lora' for the fine-tuned LoRA model.")
+    parser.add_argument('--lora_model_path', type=str, default=None,
+                        help="Path to the fine-tuned LoRA model (required if model_type='lora').")
+    parser.add_argument('--val_limit', type=str, required=True, default=5,
+                        help="Validate on how many sammples max=200")
     
-    main(model, tokenizer, model_type = 'baseline')
+    args = parser.parse_args()
+
+    print("Running __eval.py__...") 
+    
+    if args.model_type == 'baseline':
+        model, tokenizer = load_qwen()
+        
+    elif args.model_type == 'lora':
+        if not args.lora_model_path:
+            raise ValueError("Please provide --lora_model_path when using model_type='lora'")
+        
+        lora_model_path = args.lora_model_path
+        
+        print('LORA-path: ', lora_model_path)
+        
+        _, tokenizer = load_qwen()
+        model = AutoModelForCausalLM.from_pretrained(lora_model_path, trust_remote_code=True)
+    
+    else:
+        print('Wrong Model Passed!')
+    
+    main(model, tokenizer, model_type=args.model_type, val_limit=int(args.val_limit))
