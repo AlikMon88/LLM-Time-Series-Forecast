@@ -19,9 +19,9 @@ def ts_encoding(series, model_type="llama", precision=3, alpha=0.99, beta=0.3):
     encoded_series = []
     for i in range(n_samples):
         if model_type == "gpt":
-            encoded_series.append(", ".join(" ".join(str(x)) for x in formatted_values[i]))
+            encoded_series.append(",".join(" ".join(str(x)) for x in formatted_values[i]))
         elif model_type == "llama":
-            encoded_series.append(", ".join(formatted_values[i]))
+            encoded_series.append(",".join(formatted_values[i]))
         else:
             raise ValueError("model_type must be 'gpt' or 'llama'")
     
@@ -48,10 +48,10 @@ def ts_decoding(encoded_series, model_type="llama", precision=3, offsets=None, s
     decoded_series = []
     for ts in encoded_series:
         if model_type == "gpt":
-            values = ts.split(", ")
+            values = ts.split(",")
             values = ["".join(x.split()) for x in values]  # Remove spaces between digits
         elif model_type == "llama":
-            values = ts.split(", ")
+            values = ts.split(",")
         else:
             raise ValueError("model_type must be 'gpt' or 'llama'")
         

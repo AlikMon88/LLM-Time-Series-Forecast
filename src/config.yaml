@@ -7,14 +7,14 @@ batch_size: 4 #(Default: 4)
 lora_rank: 4 # (Default: 4)
 hidden_layers: 24  # 24 is the trained-one forward | We are not retraining the hidden layers
 model_size: "0.5b"
-training_steps: 10000
+training_steps: 5000
 learning_rate: 0.00001  # 1e-5
 ### The Forecast lenght to work with (cut off the max_inf_token when forecast lenght reached)
 forecast_length: 21
 ### Context length (=seq_len relevant for overlapped chunking)
 max_tokens: 32768  #512 # #32768| We are not retraining the embedding layers (== context length) but that is exclusivevly for process_sequences_v1 (implementation) -- for v2 its (5)
 ### For each train_step (the number of validation_samples to check)
-val_limit : 2
+val_limit : 5
 
 train_split: 0.8
 time_step_split: 0.8

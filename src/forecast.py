@@ -3,27 +3,6 @@ import re
 import random
 import torch
 
-def create_forecast_prompt_sep(encoded_series, forecast_length=10, name='prey'):
-    
-    prompt = f"""<|im_start|>user
-    I have a time series representing {name} populations. Each timestep is separated by commas.
-
-    Time series data: {encoded_series}
-
-    Predict exactly {forecast_length} timesteps, following the same pattern and formatting.
-    Ensure the output consists of exactly {forecast_length} values, comma-separated, without any additional text or explanation.
-    Stop generating after {forecast_length} steps.
-
-    Output format example:
-    [value1, value2, ..., value{forecast_length}]
-
-    Strictly follow this format and do not generate more or fewer than {forecast_length} values.
-    <|im_end|>
-    <|im_start|>assistant
-    """
-    
-    return prompt
-
 def create_forecast_prompt_joint(encoded_series, forecast_length=10, prey_name='prey', predator_name='predator', is_show = False):
     
     series_len = len(encoded_series.split(';')) // 2
@@ -35,7 +14,7 @@ def create_forecast_prompt_joint(encoded_series, forecast_length=10, prey_name='
     The data is formatted as: {encoded_series};
 
     Predict the next {forecast_length} points in the same format as below:
-    {'; '.join([f'{{prey_{series_len + i}}}, {{pred_{series_len + i}}}' for i in range(1, forecast_length + 1)])}
+    {';'.join([f'{{prey_{series_len + i}}},{{pred_{series_len + i}}}' for i in range(1, forecast_length + 1)])}
 
     JUST PREDICT DON'T SAY ANYTHING
     
@@ -50,7 +29,7 @@ def create_forecast_prompt_joint(encoded_series, forecast_length=10, prey_name='
 
 def create_forecast_prompt_joint_lora(encoded_series_prey, encoded_series_predator):
 
-    prompt = f"""{ '; '.join([f'{prey}, {pred}' for prey, pred in zip(encoded_series_prey.split(', '), encoded_series_predator.split(', '))])};"""
+    prompt = f"""{ ';'.join([f'{prey},{pred}' for prey, pred in zip(encoded_series_prey.split(','), encoded_series_predator.split(','))])};"""
 
     return prompt
 
@@ -83,10 +62,14 @@ def extract_forecasts(forecast_output, model_type='llama'):
 
 
 # Generate forecasts
-def generate_forecast(model, prompt, tokenizer, max_new_tokens=100, temperature=0.1, is_tokenized=False):
-
+def generate_forecast(model, prompt, tokenizer, max_new_tokens=100, temperature=0.1, is_tokenized=False, repetition_penalty=2.9, seed=42):
+    
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+    
     if not is_tokenized:
-        inputs = tokenizer(prompt, return_tensors="pt")
+        inputs = tokenizer(prompt, return_tensors="pt", add_special_tokens=False)
     else:
         inputs = {'input_ids': prompt.to(model.device)}
 
@@ -96,6 +79,10 @@ def generate_forecast(model, prompt, tokenizer, max_new_tokens=100, temperature=
         max_new_tokens=max_new_tokens,
         temperature=temperature,  # Low temperature for more deterministic output
         do_sample=True,
+        repetition_penalty=repetition_penalty,  # Prevent repetitive tokens
+        # top_p=0.95,  # Slightly more restrictive top_p
+        # top_k=10,    # Limit to top 10 tokens at each step
+        pad_token_id=tokenizer.pad_token_id,
     )
     
     # Extract only the newly generated tokens

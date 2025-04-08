@@ -392,7 +392,7 @@ if __name__ == "__main__":
     [{"model_size": "0.5b", "seq_length": 128, "batch_size": 4, "lora_rank": 8, "training_steps": 500, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
     [{"model_size": "0.5b", "seq_length": 512, "batch_size": 4, "lora_rank": 8, "training_steps": 500, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
     [{"model_size": "0.5b", "seq_length": 768, "batch_size": 4, "lora_rank": 8, "training_steps": 500, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
-    [{"model_size": "0.5b", "seq_length": 768, "batch_size": 4, "lora_rank": 8, "training_steps": 5000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
+    [{"model_size": "0.5b", "seq_length": 768, "batch_size": 4, "lora_rank": 8, "training_steps": 10000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
     [{"model_size": "0.5b", "seq_length": 512, "batch_size": 4, "lora_rank": 4, "training_steps": 5000, 'hidden_layers' : manual_config['hidden_layers']}, True, True],
     [{"model_size": "0.5b", "seq_length": 512, "batch_size": 4, "lora_rank": 4, "training_steps": 5000, 'hidden_layers' : manual_config['hidden_layers']}, False, True],
     [{"model_size": "0.5b", "seq_length": 768, "batch_size": 4, "lora_rank": 4, "training_steps": 5000, 'hidden_layers' : manual_config['hidden_layers']}, True, True], 

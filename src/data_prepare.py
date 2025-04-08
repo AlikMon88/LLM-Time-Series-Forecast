@@ -23,7 +23,14 @@ def prepare_data(data_prey, data_pred, tokenizer, max_ctx_length, train_split, f
     prey_pred_encoded = np.array(prey_pred_encoded)
     prey_pred_encoded = prey_pred_encoded[np.random.permutation(len(prey_pred_encoded))]
     
+    
     data_train, data_test = prey_pred_encoded[:int(train_split * len(prey_pred_encoded))], prey_pred_encoded[int(train_split * len(prey_pred_encoded)):]  
+    
+    print()
+    print('sample-train-encoded:')
+    print(data_train[0][:30])
+    print()
+    
     if len(data_train) < len(data_test):
         data_test = data_test[:int(0.5*len(data_train))]
 

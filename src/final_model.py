@@ -72,7 +72,7 @@ def train_final_model():
         best_config = yaml.safe_load(file)
     
     # Update training steps for final training
-    best_config['training_steps'] = 10000 ## change to 30k
+    best_config['training_steps'] = 5000 ## change to 30k
     
     # Save updated config
     with open(best_config_yaml, 'w') as file:

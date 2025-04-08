@@ -65,7 +65,7 @@ def hyper_flops_counter(r_config):
 def run_hyperparameter_search_lr_rank():
     
     # Hyperparameter grid
-    learning_rates = [1e-5, 5e-5, 4e-4]
+    learning_rates = [1e-5, 5e-5, 1e-4]
     lora_ranks = [2, 4, 8]
     
     # Track results
