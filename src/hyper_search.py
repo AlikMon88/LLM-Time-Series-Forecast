@@ -65,8 +65,8 @@ def hyper_flops_counter(r_config):
 def run_hyperparameter_search_lr_rank():
     
     # Hyperparameter grid
-    learning_rates = [1e-5]#, 5e-5, 4e-4]
-    lora_ranks = [2]#, 4, 8]
+    learning_rates = [1e-5, 5e-5, 4e-4]
+    lora_ranks = [2, 4, 8]
     
     # Track results
     results = []
@@ -87,7 +87,7 @@ def run_hyperparameter_search_lr_rank():
         config['lora_rank'] = rank
         config['seq_length'] = 512
         config['max_tokens'] = 512 ## Context-len needs to optimized for 2k steps
-        config['training_steps'] = 1  # Fixed training steps for comparison (NEED: 10k steps)
+        config['training_steps'] = 500  # Fixed training steps for comparison (NEED: 10k steps)
         
         # Save modified config
         run_config_path = os.path.join(hyper_save_dir, f'config_lr{lr}_rank{rank}_512.yaml')
@@ -192,7 +192,7 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
         config['lora_rank'] = rank
         config['seq_length'] = ctx_len
         config['max_tokens'] = ctx_len ## Context-len needs to optimized for 2k steps
-        config['training_steps'] = 1  # Fixed training steps for comparison (NEED: 10k steps)
+        config['training_steps'] = 500  # Fixed training steps for comparison (NEED: 10k steps)
         
         # Save modified config
         run_config_path = os.path.join(hyper_save_dir, f'config_lr{lr}_rank{rank}_ctx{ctx_len}.yaml')
@@ -211,8 +211,8 @@ def run_hyperparameter_search_ctx(best_config, data, data_true, time_data):
             # Train model
             model_lora, train_curve, val_curve, steps = lora_trainer.train()
             
-            # run eval.py \\\ The MODEL_LORA is not good enough for prediction 
-            eval_metrics = evaluate_lora_model(model_lora, data_test, data_true, time_data, offset_scale, tokenizer=tokenizer, is_instruction=False)
+            # run eval.py \\\ The MODEL_LORA is not good enough for prediction || WAITING FOR APPROVAL ....
+            # eval_metrics = evaluate_lora_model(model_lora, data_test, data_true, time_data, offset_scale, tokenizer=tokenizer, is_instruction=False)
             
             # Calculate final validation loss
             final_val_loss = val_curve[-1] if val_curve else float('inf')
