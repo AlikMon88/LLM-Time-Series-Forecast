@@ -1,4 +1,4 @@
-# M2: Deep Learning Coursework
+# LLM for Time-Series Forecasting
 
 This repository contains my implementation of M2 Courework.
 
